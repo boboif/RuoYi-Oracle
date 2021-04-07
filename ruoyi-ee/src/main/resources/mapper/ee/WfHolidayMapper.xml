@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.WfHolidayMapper">
+    
+    <resultMap type="WfHoliday" id="WfHolidayResult">
+        <result property="wfHolidayId"    column="wf_holiday_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="hritemsId"    column="hritems_id"    />
+        <result property="allDays"    column="all_days"    />
+        <result property="allHours"    column="all_hours"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createId"    column="create_id"    />
+        <result property="verifyDesc"    column="verify_desc"    />
+        <result property="talk"    column="talk"    />
+        <result property="ifCwDetailShow"    column="if_cw_detail_show"    />
+        <result property="processInsId"    column="process_ins_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="WfHolidayWfHolidayItemResult" type="WfHoliday" extends="WfHolidayResult">
+        <collection property="wfHolidayItemList" notNullColumn="wf_holiday_item_id" javaType="java.util.List" resultMap="WfHolidayItemResult" />
+    </resultMap>
+
+    <resultMap type="WfHolidayItem" id="WfHolidayItemResult">
+        <result property="wfHolidayItemId"    column="wf_holiday_item_id"    />
+        <result property="wfHolidayId"    column="wf_holiday_id"    />
+        <result property="fromDate"    column="from_date"    />
+        <result property="toDate"    column="to_date"    />
+        <result property="daySum"    column="day_sum"    />
+        <result property="hourSum"    column="hour_sum"    />
+        <result property="remark"    column="remark"    />
+        <result property="payWay"    column="pay_way"    />
+        <result property="hritemsId"    column="hritems_id"    />
+        <result property="holidayType"    column="holiday_type"    />
+    </resultMap>
+
+    <sql id="selectWfHolidayVo">
+        select wf_holiday_id, onoff_station_id, hritems_id, all_days, all_hours, status, create_time, create_id, verify_desc, talk, if_cw_detail_show, process_ins_id, create_by, update_by, update_time, remark from wf_holiday
+    </sql>
+
+    <select id="selectWfHolidayList" parameterType="WfHoliday" resultMap="WfHolidayResult">
+        <include refid="selectWfHolidayVo"/>
+        <where>  
+            <if test="onoffStationId != null "> and onoff_station_id = #{onoffStationId}</if>
+            <if test="hritemsId != null "> and hritems_id = #{hritemsId}</if>
+            <if test="allDays != null "> and all_days = #{allDays}</if>
+            <if test="allHours != null "> and all_hours = #{allHours}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="verifyDesc != null  and verifyDesc != ''"> and verify_desc = #{verifyDesc}</if>
+            <if test="talk != null  and talk != ''"> and talk = #{talk}</if>
+            <if test="ifCwDetailShow != null "> and if_cw_detail_show = #{ifCwDetailShow}</if>
+            <if test="processInsId != null "> and process_ins_id = #{processInsId}</if>
+        </where>
+    </select>
+    
+    <select id="selectWfHolidayById" parameterType="Long" resultMap="WfHolidayWfHolidayItemResult">
+        select a.wf_holiday_id, a.onoff_station_id, a.hritems_id, a.all_days, a.all_hours, a.status, a.create_time, a.create_id, a.verify_desc, a.talk, a.if_cw_detail_show, a.process_ins_id, a.create_by, a.update_by, a.update_time, a.remark,
+            b.wf_holiday_item_id, b.wf_holiday_id, b.from_date, b.to_date, b.day_sum, b.hour_sum, b.remark, b.pay_way, b.hritems_id, b.holiday_type
+        from wf_holiday a
+        left join wf_holiday_item b on b.wf_holiday_id = a.wf_holiday_id
+        where a.wf_holiday_id = #{wfHolidayId}
+    </select>
+        
+    <insert id="insertWfHoliday" parameterType="WfHoliday">
+        <selectKey keyProperty="wfHolidayId" resultType="long" order="BEFORE">
+            SELECT seq_wf_holiday.NEXTVAL as wfHolidayId FROM DUAL
+        </selectKey>
+        insert into wf_holiday
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wfHolidayId != null">wf_holiday_id,</if>
+            <if test="onoffStationId != null">onoff_station_id,</if>
+            <if test="hritemsId != null">hritems_id,</if>
+            <if test="allDays != null">all_days,</if>
+            <if test="allHours != null">all_hours,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="verifyDesc != null">verify_desc,</if>
+            <if test="talk != null">talk,</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show,</if>
+            <if test="processInsId != null">process_ins_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wfHolidayId != null">#{wfHolidayId},</if>
+            <if test="onoffStationId != null">#{onoffStationId},</if>
+            <if test="hritemsId != null">#{hritemsId},</if>
+            <if test="allDays != null">#{allDays},</if>
+            <if test="allHours != null">#{allHours},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="verifyDesc != null">#{verifyDesc},</if>
+            <if test="talk != null">#{talk},</if>
+            <if test="ifCwDetailShow != null">#{ifCwDetailShow},</if>
+            <if test="processInsId != null">#{processInsId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWfHoliday" parameterType="WfHoliday">
+        update wf_holiday
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onoffStationId != null">onoff_station_id = #{onoffStationId},</if>
+            <if test="hritemsId != null">hritems_id = #{hritemsId},</if>
+            <if test="allDays != null">all_days = #{allDays},</if>
+            <if test="allHours != null">all_hours = #{allHours},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="verifyDesc != null">verify_desc = #{verifyDesc},</if>
+            <if test="talk != null">talk = #{talk},</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show = #{ifCwDetailShow},</if>
+            <if test="processInsId != null">process_ins_id = #{processInsId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where wf_holiday_id = #{wfHolidayId}
+    </update>
+
+    <delete id="deleteWfHolidayById" parameterType="Long">
+        delete from wf_holiday where wf_holiday_id = #{wfHolidayId}
+    </delete>
+
+    <delete id="deleteWfHolidayByIds" parameterType="String">
+        delete from wf_holiday where wf_holiday_id in 
+        <foreach item="wfHolidayId" collection="array" open="(" separator="," close=")">
+            #{wfHolidayId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteWfHolidayItemByWfHolidayIds" parameterType="String">
+        delete from wf_holiday_item where wf_holiday_id in 
+        <foreach item="wfHolidayId" collection="array" open="(" separator="," close=")">
+            #{wfHolidayId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWfHolidayItemByWfHolidayId" parameterType="Long">
+        delete from wf_holiday_item where wf_holiday_id = #{wfHolidayId}
+    </delete>
+
+    <insert id="batchWfHolidayItem">
+        insert all
+        <foreach item="item" index="index" collection="list">
+            into wf_holiday_item( wf_holiday_item_id, wf_holiday_id, from_date, to_date, day_sum, hour_sum, remark, pay_way, hritems_id, holiday_type)
+            values ( SEQ_WF_HOLIDAY.nextval, #{item.wfHolidayId}, #{item.fromDate}, #{item.toDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.payWay,jdbcType=INTEGER}, #{item.hritemsId,jdbcType=INTEGER}, #{item.holidayType,jdbcType=INTEGER})
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+</mapper>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('假期申请列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>类型：</label>
+                                <select name="hritemsId" th:with="type=${@dict.getType('ee_holiday')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>总天数：</label>
+                                <input type="text" name="allDays"/>
+                            </li>
+                            <li>
+                                <label>状态</label>
+                                <select name="status" th:with="type=${@dict.getType('ee_apply_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="ee:holiday:add">
+                    <i class="fa fa-plus"></i> 申 请
+                </a>
+<!--                <a class="btn btn-primary single disabled" onclick="$.operate.addTab()" shiro:hasPermission="ee:holiday:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="ee:holiday:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                -->
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="ee:holiday:export">
+                    <i class="fa fa-download"></i> 导 出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('ee:holiday:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('ee:holiday:remove')}]];
+        var hritemsIdDatas = [[${@dict.getType('ee_holiday')}]];
+        var statusDatas = [[${@dict.getType('ee_apply_status')}]];
+        var prefix = ctx + "ee/holiday";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                detailUrl: prefix + "/detail/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "假期申请",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'wfHolidayId',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    align: "center",
+                    width: 160,
+                },
+                {
+                    field: 'hritemsId',
+                    title: '类型',
+                    width: 80,
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(hritemsIdDatas, value);
+                    }
+                },
+                {
+                    field: 'allDays',
+                    title: '总天数',
+                    width: 80,
+                },
+                {
+                    field: 'allHours',
+                    title: '总时数',
+                    width: 80,
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    width: 80,
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+               /* {
+                    field: 'createId',
+                    title: '创建人ID'
+                },
+                {
+                    field: 'verifyDesc',
+                    title: '审批历史'
+                },*/
+                {
+                    field: 'talk',
+                    title: '说明'
+                },
+               /* {
+                    field: 'ifCwDetailShow',
+                    title: '是否显示'
+                },
+                 {
+                    field: 'remark',
+                    title: '备注'
+                },
+                */
+
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.status==0){ // 0未申请1申请中 2 通过 3驳回
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.addTab(\'' + row.wfHolidayId + '\')"><i class="fa fa-edit"></i>继续</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.wfHolidayId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }else if(row.status==1){
+                            actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="undo(\'' + row.wfHolidayId + '\')"><i class="fa fa-undo"></i>撤回</a> ');
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.wfHolidayId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+
+                        }else if(row.status==2) {
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.wfHolidayId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+
+                        }else if(row.status==3) {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.addTab(\'' + row.wfHolidayId + '\')"><i class="fa fa-edit"></i>继续</a> ');
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.wfHolidayId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+                        }
+
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

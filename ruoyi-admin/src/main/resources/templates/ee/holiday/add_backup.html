@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('假期申请')"/>
+    <th:block th:include="include :: bootstrap-editable-css"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-holiday-add">
+        <h4 class="form-header h4">假期信息</h4>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">假期类型</label>
+            <div class="col-sm-8">
+                <input name="onoffStationId" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">总天数：</label>
+            <div class="col-sm-8">
+                <input name="allDays" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">总时数：</label>
+            <div class="col-sm-8">
+                <input name="allHours" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态0未申请1申请中 2 通过 3驳回：</label>
+            <div class="col-sm-8">
+                <div class="radio-box">
+                    <input type="radio" name="status" value="">
+                    <label th:for="status" th:text="未知"></label>
+                </div>
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">审批历史：</label>
+            <div class="col-sm-8">
+                <input name="verifyDesc" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">说明：</label>
+            <div class="col-sm-8">
+                <input name="talk" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <input name="remark" class="form-control" type="text">
+            </div>
+        </div>
+        <h4 class="form-header h4">请假明细信息</h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i>
+                </button>
+                <button type="button" class="btn btn-white btn-sm" onclick="sub.delColumn()"><i
+                        class="fa fa-minus">删除</i></button>
+                <div class="col-sm-12 select-table table-striped">
+                    <table id="bootstrap-table"></table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-sm-offset-5 col-sm-10">
+        <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>提 交
+        </button>&nbsp;
+        <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>返 回
+        </button>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-table-editable-js"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: moment-js"/>
+
+<script th:inline="javascript">
+    var prefix = ctx + "ee/holiday"
+
+    /*    $("#form-holiday-add").validate({
+            focusCleanup: true
+        });*/
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-holiday-add').serialize());
+        }
+    }
+
+    $(function () {
+        var options = {
+            pagination: false,
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
+            sidePagination: "client",
+            uniqueId: "index",
+            onEditableSave: onEditableSave,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    visible: false,
+                    formatter: function (value, row, index) {
+                        var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s' >", $.table.serialNumber(index));
+                        return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'fromDate',
+                    title: '开始时间',
+                    formatter: function (value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='item[%s].fromDate' value='%s' placeholder='yyyy-MM-dd'>", index, value);
+                        return html;
+                    },
+
+
+                },
+                {
+                    field: 'toDate',
+                    title: '截止时间',
+                    formatter: function (value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='item[%s].toDate' value='%s' placeholder='yyyy-MM-dd'>", index, value);
+                        return html;
+                    },
+                },
+                {
+                    field: 'daySum',
+                    align: 'center',
+                    title: '总天数',
+                    formatter: function (value, row, index) {
+                        var html = $.common.sprintf("<div name='item[%s].daySum' > %s</div>", index, value);
+                        return html;
+                    },
+                },
+                {
+                    field: 'hourSum',
+                    align: 'center',
+                    title: '总时数',
+                    formatter: function (value, row, index) {
+                        var html = $.common.sprintf("<div name='item[%s].hourSum' > %s</div>", index, value);
+                        return html;
+                    },
+                },
+                {
+                    field: 'remark',
+                    align: 'center',
+                    title: '备注',
+                    editable: {
+                        type: 'textarea',
+                        title: '备注',
+                        mode: 'inline',
+                        //emptytext : "",
+                    }
+                },
+                {
+                    field: 'holidayType',
+                    align: 'center',
+                    title: '假期类型',
+                    editable: {
+                        type: 'select',
+                        title: '状态',
+                        mode: 'inline',
+                        source: [{
+                            value: 1,
+                            text: "全体假"
+                        }, {
+                            value: 2,
+                            text: "半天假"
+                        }, {
+                            value: 3,
+                            text: "小时假"
+                        }]
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function addColumn() {
+        var count = $("#" + table.options.id).bootstrapTable('getData').length;
+        $("#" + table.options.id).bootstrapTable('insertRow', {
+            index: count,
+            row: {
+                index: $.table.serialNumber(count),
+                fromDate: "",
+                toDate: "",
+                daySum: "",
+                hourSum: "",
+                remark: "",
+                payWay: "",
+                hritemsId: "",
+                holidayType: ""
+            }
+        });
+    }
+
+    function onEditableSave(field, row, rowIndex, oldValue, $el) {
+        alert("字段名：" + field + "，当前值：" + row[field] + "，旧值：" + oldValue);
+        row['hourSum'] = '33';
+
+        console.log(row['fromDate'])
+        console.log(row['toDate'])
+        $("hourSum").val(445)
+
+    };
+
+    $("#bootstrap-table").on("post-body.bs.table", function (e, args) {
+        $("input[name$='Date']").datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            minuteStep: 30,
+            pickTime: true,
+            language: 'zh-CN',
+            todayHighlight: true,
+            pickerPosition: 'top-right'
+        });
+    });
+
+    $("#bootstrap-table").on("post-body.bs.table", function (e) {
+        $("input[name$='fromDate']").change(function () {
+            var row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', 1);
+            row.fromDate = $(this).val();
+            setHourSum(row);
+            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row})
+
+        });
+
+        $("input[name$='toDate']").change(function () {
+            var row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', 1);
+            row.toDate = $(this).val();
+            setHourSum(row);
+            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row})
+
+        });
+
+    });
+
+    function setHourSum(row) {
+        if ($.common.isEmpty(row.fromDate)) {
+            return;
+        }
+        if ($.common.isEmpty(row.toDate)) {
+            return;
+        }
+
+        let fd = moment(row.fromDate);
+        let td = moment(row.toDate);
+        let diffHour =td.diff(fd, 'hours');
+        if(row.hourSum<0){
+            $.modal.msgError('截止日期必须晚于开始日期！')
+        }
+        row.daySum = td.diff(fd, 'days', true);
+        row.hourSum = diffHour;
+
+
+    }
+
+</script>
+</body>
+</html>

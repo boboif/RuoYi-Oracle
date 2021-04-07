@@ -33,6 +33,12 @@ public class SysUser extends BaseEntity
     /** 部门父ID */
     private Long parentId;
 
+    //ehr 入离职ID
+    private Long onOffStationId;
+
+    //ehr 员工ID
+    private Long employeeId;
+
     /** 角色ID */
     private Long roleId;
 
@@ -104,6 +110,22 @@ public class SysUser extends BaseEntity
     public SysUser()
     {
 
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getOnOffStationId() {
+        return onOffStationId;
+    }
+
+    public void setOnOffStationId(Long onOffStationId) {
+        this.onOffStationId = onOffStationId;
     }
 
     public SysUser(Long userId)

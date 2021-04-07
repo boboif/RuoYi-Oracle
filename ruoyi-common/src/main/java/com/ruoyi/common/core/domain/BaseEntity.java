@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.utils.ShiroUtils;
 
 /**
  * Entity基类
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
+
 
     /** 搜索值 */
     private String searchValue;
@@ -37,6 +39,16 @@ public class BaseEntity implements Serializable
 
     /** 请求参数 */
     private Map<String, Object> params;
+
+    private Long oosId = ShiroUtils.getOosId();
+
+    public Long getOosId() {
+        return oosId;
+    }
+
+    public void setOosId(Long oosId) {
+        this.oosId = oosId;
+    }
 
     public String getSearchValue()
     {

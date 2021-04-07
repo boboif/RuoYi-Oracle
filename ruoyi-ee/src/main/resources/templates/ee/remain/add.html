@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增可以享受的假期， 根据规则计算出结果')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-remain-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <input name="onoffStationId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">剩余小时数 = curentHours + lastYearPHHours - usedHours：</label>
+                <div class="col-sm-8">
+                    <input name="phHours" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">剩余天数：</label>
+                <div class="col-sm-8">
+                    <input name="phDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">假期类型：</label>
+                <div class="col-sm-8">
+                    <input name="hritemsId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">最近计算时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="lastComputeTime" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="remark" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">上年转入天数：</label>
+                <div class="col-sm-8">
+                    <input name="lastYearRollinDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">上年转入时数：</label>
+                <div class="col-sm-8">
+                    <input name="lastYearRollinHours" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">已用天数：</label>
+                <div class="col-sm-8">
+                    <input name="usedDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">已用时数：</label>
+                <div class="col-sm-8">
+                    <input name="usedHours" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">属于哪个年份：</label>
+                <div class="col-sm-8">
+                    <input name="belongYear" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">本年天数：</label>
+                <div class="col-sm-8">
+                    <input name="curentDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">本年时数：</label>
+                <div class="col-sm-8">
+                    <input name="curentHours" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <input name="inputCurentDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <input name="createId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="createDate" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <input name="modifyId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手动输入的本年天数：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="modifyDate" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "ee/remain"
+        $("#form-remain-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-remain-add').serialize());
+            }
+        }
+
+        $("input[name='lastComputeTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='createDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='modifyDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

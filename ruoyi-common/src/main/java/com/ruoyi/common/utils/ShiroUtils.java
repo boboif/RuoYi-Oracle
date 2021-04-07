@@ -57,7 +57,10 @@ public class ShiroUtils
     {
         return getSysUser().getUserId().longValue();
     }
-
+    public static Long getOosId()
+    {
+        return getSysUser().getOnOffStationId().longValue();
+    }
     public static String getLoginName()
     {
         return getSysUser().getLoginName();

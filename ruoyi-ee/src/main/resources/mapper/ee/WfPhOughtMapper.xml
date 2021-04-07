@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.WfPhOughtMapper">
+    
+    <resultMap type="WfPhOught" id="WfPhOughtResult">
+        <result property="phOughtId"    column="ph_ought_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="phHours"    column="ph_hours"    />
+        <result property="phDays"    column="ph_days"    />
+        <result property="hritemsId"    column="hritems_id"    />
+        <result property="lastComputeTime"    column="last_compute_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="lastYearRollinDays"    column="last_year_rollin_days"    />
+        <result property="lastYearRollinHours"    column="last_year_rollin_hours"    />
+        <result property="usedDays"    column="used_days"    />
+        <result property="usedHours"    column="used_hours"    />
+        <result property="belongYear"    column="belong_year"    />
+        <result property="curentDays"    column="curent_days"    />
+        <result property="curentHours"    column="curent_hours"    />
+        <result property="inputCurentDays"    column="input_curent_days"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="modifyId"    column="modify_id"    />
+        <result property="modifyDate"    column="modify_date"    />
+    </resultMap>
+
+    <sql id="selectWfPhOughtVo">
+        select ph_ought_id, onoff_station_id, ph_hours, ph_days, hritems_id, last_compute_time, remark, last_year_rollin_days, last_year_rollin_hours, used_days, used_hours, belong_year, curent_days, curent_hours, input_curent_days, create_id, create_date, modify_id, modify_date from wf_ph_ought
+    </sql>
+
+    <select id="selectWfPhOughtList" parameterType="WfPhOught" resultMap="WfPhOughtResult">
+        <include refid="selectWfPhOughtVo"/>
+        <where>  
+            <if test="onoffStationId != null "> and onoff_station_id = #{onoffStationId}</if>
+            <if test="params.beginPhHours != null and params.beginPhHours != '' and params.endPhHours != null and params.endPhHours != ''"> and ph_hours between #{params.beginPhHours} and #{params.endPhHours}</if>
+            <if test="phDays != null "> and ph_days = #{phDays}</if>
+            <if test="hritemsId != null "> and hritems_id = #{hritemsId}</if>
+            <if test="lastComputeTime != null "> and last_compute_time = #{lastComputeTime}</if>
+            <if test="lastYearRollinDays != null "> and last_year_rollin_days = #{lastYearRollinDays}</if>
+            <if test="lastYearRollinHours != null "> and last_year_rollin_hours = #{lastYearRollinHours}</if>
+            <if test="usedDays != null "> and used_days = #{usedDays}</if>
+            <if test="usedHours != null "> and used_hours = #{usedHours}</if>
+            <if test="belongYear != null "> and belong_year = #{belongYear}</if>
+            <if test="curentDays != null "> and curent_days = #{curentDays}</if>
+            <if test="curentHours != null "> and curent_hours = #{curentHours}</if>
+            <if test="inputCurentDays != null "> and input_curent_days = #{inputCurentDays}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="modifyId != null "> and modify_id = #{modifyId}</if>
+            <if test="modifyDate != null "> and modify_date = #{modifyDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectWfPhOughtById" parameterType="WfPhOught" resultMap="WfPhOughtResult">
+        <include refid="selectWfPhOughtVo"/>
+        where ph_ought_id = #{phOughtId}
+        and onoff_station_id = #{oosId}
+    </select>
+        
+    <insert id="insertWfPhOught" parameterType="WfPhOught">
+        <selectKey keyProperty="phOughtId" resultType="long" order="BEFORE">
+            SELECT seq_wf_ph_ought.NEXTVAL as phOughtId FROM DUAL
+        </selectKey>
+        insert into wf_ph_ought
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phOughtId != null">ph_ought_id,</if>
+            <if test="onoffStationId != null">onoff_station_id,</if>
+            <if test="phHours != null">ph_hours,</if>
+            <if test="phDays != null">ph_days,</if>
+            <if test="hritemsId != null">hritems_id,</if>
+            <if test="lastComputeTime != null">last_compute_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="lastYearRollinDays != null">last_year_rollin_days,</if>
+            <if test="lastYearRollinHours != null">last_year_rollin_hours,</if>
+            <if test="usedDays != null">used_days,</if>
+            <if test="usedHours != null">used_hours,</if>
+            <if test="belongYear != null">belong_year,</if>
+            <if test="curentDays != null">curent_days,</if>
+            <if test="curentHours != null">curent_hours,</if>
+            <if test="inputCurentDays != null">input_curent_days,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="modifyId != null">modify_id,</if>
+            <if test="modifyDate != null">modify_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phOughtId != null">#{phOughtId},</if>
+            <if test="onoffStationId != null">#{onoffStationId},</if>
+            <if test="phHours != null">#{phHours},</if>
+            <if test="phDays != null">#{phDays},</if>
+            <if test="hritemsId != null">#{hritemsId},</if>
+            <if test="lastComputeTime != null">#{lastComputeTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="lastYearRollinDays != null">#{lastYearRollinDays},</if>
+            <if test="lastYearRollinHours != null">#{lastYearRollinHours},</if>
+            <if test="usedDays != null">#{usedDays},</if>
+            <if test="usedHours != null">#{usedHours},</if>
+            <if test="belongYear != null">#{belongYear},</if>
+            <if test="curentDays != null">#{curentDays},</if>
+            <if test="curentHours != null">#{curentHours},</if>
+            <if test="inputCurentDays != null">#{inputCurentDays},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="modifyId != null">#{modifyId},</if>
+            <if test="modifyDate != null">#{modifyDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWfPhOught" parameterType="WfPhOught">
+        update wf_ph_ought
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onoffStationId != null">onoff_station_id = #{onoffStationId},</if>
+            <if test="phHours != null">ph_hours = #{phHours},</if>
+            <if test="phDays != null">ph_days = #{phDays},</if>
+            <if test="hritemsId != null">hritems_id = #{hritemsId},</if>
+            <if test="lastComputeTime != null">last_compute_time = #{lastComputeTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="lastYearRollinDays != null">last_year_rollin_days = #{lastYearRollinDays},</if>
+            <if test="lastYearRollinHours != null">last_year_rollin_hours = #{lastYearRollinHours},</if>
+            <if test="usedDays != null">used_days = #{usedDays},</if>
+            <if test="usedHours != null">used_hours = #{usedHours},</if>
+            <if test="belongYear != null">belong_year = #{belongYear},</if>
+            <if test="curentDays != null">curent_days = #{curentDays},</if>
+            <if test="curentHours != null">curent_hours = #{curentHours},</if>
+            <if test="inputCurentDays != null">input_curent_days = #{inputCurentDays},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="modifyId != null">modify_id = #{modifyId},</if>
+            <if test="modifyDate != null">modify_date = #{modifyDate},</if>
+        </trim>
+        where ph_ought_id = #{phOughtId}
+    </update>
+
+    <delete id="deleteWfPhOughtById" parameterType="Long">
+        delete from wf_ph_ought where ph_ought_id = #{phOughtId}
+    </delete>
+
+    <delete id="deleteWfPhOughtByIds" parameterType="String">
+        delete from wf_ph_ought where ph_ought_id in 
+        <foreach item="phOughtId" collection="array" open="(" separator="," close=")">
+            #{phOughtId}
+        </foreach>
+    </delete>
+</mapper>

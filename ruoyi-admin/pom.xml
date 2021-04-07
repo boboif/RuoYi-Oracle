@@ -79,6 +79,11 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
+        <!-- 员工端-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-ee</artifactId>
+        </dependency>
 
     </dependencies>
 
