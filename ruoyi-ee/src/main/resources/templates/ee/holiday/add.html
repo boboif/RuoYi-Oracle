@@ -111,7 +111,6 @@
                     title: "序号",
                     formatter: function (value, row, index) {
                         var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
-
                         return  columnIndex+$.table.serialNumber(index);
                     }
                 },

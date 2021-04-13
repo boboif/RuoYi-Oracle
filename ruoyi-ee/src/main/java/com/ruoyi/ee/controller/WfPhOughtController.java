@@ -51,7 +51,7 @@ public class WfPhOughtController extends BaseController
     @ResponseBody
     public TableDataInfo list(WfPhOught wfPhOught)
     {
-        wfPhOught.setOnoffStationId(ShiroUtils.getOosId());
+      //  wfPhOught.setOnoffStationId(ShiroUtils.getOosId());
         startPage();
         List<WfPhOught> list = wfPhOughtService.selectWfPhOughtList(wfPhOught);
         return getDataTable(list);
@@ -66,7 +66,6 @@ public class WfPhOughtController extends BaseController
     @ResponseBody
     public AjaxResult export(WfPhOught wfPhOught)
     {
-        wfPhOught.setOnoffStationId(ShiroUtils.getOosId());
         List<WfPhOught> list = wfPhOughtService.selectWfPhOughtList(wfPhOught);
         ExcelUtil<WfPhOught> util = new ExcelUtil<WfPhOught>(WfPhOught.class);
         return util.exportExcel(list, "remain");

@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="WfPhOught" id="WfPhOughtResult">
         <result property="phOughtId"    column="ph_ought_id"    />
-        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"  />
         <result property="phHours"    column="ph_hours"    />
         <result property="phDays"    column="ph_days"    />
         <result property="hritemsId"    column="hritems_id"    />
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectWfPhOughtById" parameterType="WfPhOught" resultMap="WfPhOughtResult">
         <include refid="selectWfPhOughtVo"/>
         where ph_ought_id = #{phOughtId}
-        and onoff_station_id = #{oosId}
+        <if test="onoffStationId != null "> and onoff_station_id = #{onoffStationId}</if>
     </select>
         
     <insert id="insertWfPhOught" parameterType="WfPhOught">

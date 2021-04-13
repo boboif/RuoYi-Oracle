@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('可以享受的假期， 根据规则计算出结果列表')" />
+    <th:block th:include="include :: header('剩余年假')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -10,80 +10,18 @@
                 <form id="formId">
                     <div class="select-list">
                         <ul>
-                            <li>
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" name="onoffStationId"/>
-                            </li>
-                            <li>
-                                <label>剩余小时数：</label>
-                                <input type="text" name="phHours"/>
-                            </li>
-                            <li>
-                                <label>剩余天数：</label>
-                                <input type="text" name="phDays"/>
-                            </li>
-                            <li>
+                            <li class="col-sm-4">
                                 <label>假期类型：</label>
                                 <select name="hritemsId" th:with="type=${@dict.getType('ee_holiday')}">
-                                    <option value="">所有</option>
+                                    <option value="">所属年份</option>
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                                 </select>
                             </li>
-                            <li>
-                                <label>最近计算时间：</label>
-                                <input type="text" class="time-input" placeholder="请选择最近计算时间" name="lastComputeTime"/>
-                            </li>
-                            <li>
-                                <label>上年转入天数：</label>
-                                <input type="text" name="lastYearRollinDays"/>
-                            </li>
-                            <li>
-                                <label>上年转入时数：</label>
-                                <input type="text" name="lastYearRollinHours"/>
-                            </li>
-                            <li>
-                                <label>已用天数：</label>
-                                <input type="text" name="usedDays"/>
-                            </li>
-                            <li>
-                                <label>已用时数：</label>
-                                <input type="text" name="usedHours"/>
-                            </li>
-                            <li>
-                                <label>属于哪个年份：</label>
+                            <li class="col-sm-4">
+                                <label >所年份：</label>
                                 <input type="text" name="belongYear"/>
                             </li>
-                            <li>
-                                <label>本年天数：</label>
-                                <input type="text" name="curentDays"/>
-                            </li>
-                            <li>
-                                <label>本年时数：</label>
-                                <input type="text" name="curentHours"/>
-                            </li>
-                            <li>
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" name="inputCurentDays"/>
-                            </li>
-                            <li>
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" name="createId"/>
-                            </li>
-                            <li class="select-time">
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginCreateDate]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endCreateDate]"/>
-                            </li>
-                            <li>
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" name="modifyId"/>
-                            </li>
-                            <li>
-                                <label>手动输入的本年天数：</label>
-                                <input type="text" class="time-input" placeholder="请选择手动输入的本年天数" name="modifyDate"/>
-                            </li>
-                            <li>
+                            <li class="col-sm-2">
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>

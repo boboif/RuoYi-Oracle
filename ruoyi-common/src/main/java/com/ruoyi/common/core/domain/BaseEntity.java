@@ -40,7 +40,7 @@ public class BaseEntity implements Serializable
     /** 请求参数 */
     private Map<String, Object> params;
 
-    private Long oosId = ShiroUtils.getOosId();
+    private Long oosId ;
 
     public Long getOosId() {
         return oosId;

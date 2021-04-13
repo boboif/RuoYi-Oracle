@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('外勤报备')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>工作日：</label>
+                                <input type="text"  class="time-input" placeholder="请选择工作日" name="workDay"/>
+                            </li>
+
+
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="ee:outdoor:add">
+                    <i class="fa fa-plus"></i> 报 备
+                </a>
+              <!--  <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="ee:outdoor:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="ee:outdoor:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>-->
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="ee:outdoor:export">
+                    <i class="fa fa-download"></i> 导 出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('ee:outdoor:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('ee:outdoor:remove')}]];
+        var prefix = ctx + "ee/outdoor";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "外勤明细",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'cwDetailId',
+                    title: '所属年份',
+                    visible: false
+                },
+                {
+                    field: 'workDay',
+                    title: '工作日'
+                },
+                {
+                    field: 'startDate',
+                    title: '开始时间'
+                },
+                {
+                    field: 'endDate',
+                    title: '截止时间'
+                },
+                {
+                    field: 'hourSum',
+                    title: '时长'
+                },
+                {
+                    field: 'createDate',
+                    title: '创建时间'
+                },
+
+                {
+                    field: 'empOutExplain',
+                    title: '报备解释'
+                },
+
+                {
+                    field: 'daySum',
+                    title: '天数'
+                },
+
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.cwDetailId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.cwDetailId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+
+    </script>
+</body>
+</html>

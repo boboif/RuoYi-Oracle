@@ -22,7 +22,7 @@
                                 <input type="text" name="allDays"/>
                             </li>
                             <li>
-                                <label>状态</label>
+                                <label>申请状态</label>
                                 <select name="status" th:with="type=${@dict.getType('ee_apply_status')}">
                                     <option value="">所有</option>
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
@@ -154,6 +154,8 @@
                         }else if(row.status==3) {
                             actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.addTab(\'' + row.wfHolidayId + '\')"><i class="fa fa-edit"></i>继续</a> ');
                             actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.wfHolidayId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+                        }else{
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.wfHolidayId + '\')"><i class="fa fa-remove"></i>删除</a>');
                         }
 
                         return actions.join('');

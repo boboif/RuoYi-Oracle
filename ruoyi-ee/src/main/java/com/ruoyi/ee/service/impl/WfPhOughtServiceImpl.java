@@ -1,6 +1,8 @@
 package com.ruoyi.ee.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.ee.mapper.WfPhOughtMapper;
@@ -30,6 +32,8 @@ public class WfPhOughtServiceImpl implements IWfPhOughtService
     public WfPhOught selectWfPhOughtById(Long phOughtId)
     {
         WfPhOught wfPhOught = new WfPhOught();
+        wfPhOught.setOnoffStationId(ShiroUtils.getOosId());
+        wfPhOught.setPhOughtId(phOughtId);
         return wfPhOughtMapper.selectWfPhOughtById(wfPhOught);
     }
 
@@ -42,6 +46,7 @@ public class WfPhOughtServiceImpl implements IWfPhOughtService
     @Override
     public List<WfPhOught> selectWfPhOughtList(WfPhOught wfPhOught)
     {
+        wfPhOught.setOnoffStationId(ShiroUtils.getOosId());
         return wfPhOughtMapper.selectWfPhOughtList(wfPhOught);
     }
 

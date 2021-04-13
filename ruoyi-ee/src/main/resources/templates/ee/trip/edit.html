@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改出差')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-trip-edit" th:object="${cwOutWork}">
+            <h4 class="form-header h4">出差信息</h4>
+            <input name="cwOutWorkId" th:field="*{cwOutWorkId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总天数：</label>
+                <div class="col-sm-8">
+                    <input name="allDays" th:field="*{allDays}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总时数：</label>
+                <div class="col-sm-8">
+                    <input name="allHours" th:field="*{allHours}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">申请状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box">
+                        <input type="radio" name="status" value="">
+                        <label th:for="status" th:text="未知"></label>
+                    </div>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">创建时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="createDate" th:value="${#dates.format(cwOutWork.createDate, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">审核历史：</label>
+                <div class="col-sm-8">
+                    <input name="verifyDesc" th:field="*{verifyDesc}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">说明：</label>
+                <div class="col-sm-8">
+                    <input name="talk" th:field="*{talk}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">预支金额：</label>
+                <div class="col-sm-8">
+                    <input name="advanceMoney" th:field="*{advanceMoney}" class="form-control" type="text">
+                </div>
+            </div>
+            <h4 class="form-header h4">${subTable.functionName}信息</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i></button>
+                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delColumn()"><i class="fa fa-minus"> 删除</i></button>
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "ee/trip";
+        $("#form-trip-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-trip-edit').serialize());
+            }
+        }
+
+        $("input[name='createDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $(function() {
+            var options = {
+                data: [[${cwOutWork.cwOutWorkitemList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'fromDate',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].fromDate' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'toDate',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].toDate' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'daySum',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].daySum' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'hourSum',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].hourSum' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'remark',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].remark' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'hritemsId',
+                    align: 'center',
+                    title: '预支金额',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].hritemsId' value='%s'>", index, value);
+                        return html;
+                    }
+				
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function addColumn() {
+            var count = $("#" + table.options.id).bootstrapTable('getData').length;
+            sub.editColumn();
+        	
+            $("#" + table.options.id).bootstrapTable('insertRow', {
+                index: count,
+                row: {
+                    index: $.table.serialNumber(count),
+                    fromDate: "",
+                    toDate: "",
+                    daySum: "",
+                    hourSum: "",
+                    remark: "",
+                    hritemsId: ""
+        	    }
+            });
+        }
+    </script>
+</body>
+</html>

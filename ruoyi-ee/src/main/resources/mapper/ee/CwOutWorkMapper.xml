@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.CwOutWorkMapper">
+    
+    <resultMap type="CwOutWork" id="CwOutWorkResult">
+        <result property="cwOutWorkId"    column="cw_out_work_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="allDays"    column="all_days"    />
+        <result property="allHours"    column="all_hours"    />
+        <result property="status"    column="status"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createId"    column="create_id"    />
+        <result property="verifyDesc"    column="verify_desc"    />
+        <result property="talk"    column="talk"    />
+        <result property="advanceMoney"    column="advance_money"    />
+        <result property="ifCwDetailShow"    column="if_cw_detail_show"    />
+        <result property="processInsId"    column="process_ins_id"    />
+    </resultMap>
+
+    <resultMap id="CwOutWorkCwOutWorkitemResult" type="CwOutWork" extends="CwOutWorkResult">
+        <collection property="cwOutWorkitemList" notNullColumn="cw_out_workitem_id" javaType="java.util.List" resultMap="CwOutWorkitemResult" />
+    </resultMap>
+
+    <resultMap type="CwOutWorkitem" id="CwOutWorkitemResult">
+        <result property="cwOutWorkitemId"    column="cw_out_workitem_id"    />
+        <result property="cwOutWorkId"    column="cw_out_work_id"    />
+        <result property="fromDate"    column="from_date"    />
+        <result property="toDate"    column="to_date"    />
+        <result property="daySum"    column="day_sum"    />
+        <result property="hourSum"    column="hour_sum"    />
+        <result property="remark"    column="remark"    />
+        <result property="hritemsId"    column="hritems_id"    />
+    </resultMap>
+
+    <sql id="selectCwOutWorkVo">
+        select cw_out_work_id, onoff_station_id, all_days, all_hours, status, create_date, create_id, verify_desc, talk, advance_money, if_cw_detail_show, process_ins_id from cw_out_work
+    </sql>
+
+    <select id="selectCwOutWorkList" parameterType="CwOutWork" resultMap="CwOutWorkResult">
+        <include refid="selectCwOutWorkVo"/>
+        <where>  
+            <if test="allDays != null "> and all_days = #{allDays}</if>
+            <if test="allHours != null "> and all_hours = #{allHours}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="verifyDesc != null  and verifyDesc != ''"> and verify_desc = #{verifyDesc}</if>
+            <if test="talk != null  and talk != ''"> and talk = #{talk}</if>
+            <if test="advanceMoney != null "> and advance_money = #{advanceMoney}</if>
+        </where>
+    </select>
+    
+    <select id="selectCwOutWorkById" parameterType="Long" resultMap="CwOutWorkCwOutWorkitemResult">
+        select a.cw_out_work_id, a.onoff_station_id, a.all_days, a.all_hours, a.status, a.create_date, a.create_id, a.verify_desc, a.talk, a.advance_money, a.if_cw_detail_show, a.process_ins_id,
+            b.cw_out_workitem_id, b.cw_out_work_id, b.from_date, b.to_date, b.day_sum, b.hour_sum, b.remark, b.hritems_id
+        from cw_out_work a
+        left join cw_out_workitem b on b.cw_out_work_id = a.cw_out_work_id
+        where a.cw_out_work_id = #{cwOutWorkId}
+    </select>
+        
+    <insert id="insertCwOutWork" parameterType="CwOutWork">
+        <selectKey keyProperty="cwOutWorkId" resultType="long" order="BEFORE">
+            SELECT seq_cw_out_work.NEXTVAL as cwOutWorkId FROM DUAL
+        </selectKey>
+        insert into cw_out_work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cwOutWorkId != null">cw_out_work_id,</if>
+            <if test="onoffStationId != null">onoff_station_id,</if>
+            <if test="allDays != null">all_days,</if>
+            <if test="allHours != null">all_hours,</if>
+            <if test="status != null">status,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="verifyDesc != null">verify_desc,</if>
+            <if test="talk != null">talk,</if>
+            <if test="advanceMoney != null">advance_money,</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show,</if>
+            <if test="processInsId != null">process_ins_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cwOutWorkId != null">#{cwOutWorkId},</if>
+            <if test="onoffStationId != null">#{onoffStationId},</if>
+            <if test="allDays != null">#{allDays},</if>
+            <if test="allHours != null">#{allHours},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="verifyDesc != null">#{verifyDesc},</if>
+            <if test="talk != null">#{talk},</if>
+            <if test="advanceMoney != null">#{advanceMoney},</if>
+            <if test="ifCwDetailShow != null">#{ifCwDetailShow},</if>
+            <if test="processInsId != null">#{processInsId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCwOutWork" parameterType="CwOutWork">
+        update cw_out_work
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onoffStationId != null">onoff_station_id = #{onoffStationId},</if>
+            <if test="allDays != null">all_days = #{allDays},</if>
+            <if test="allHours != null">all_hours = #{allHours},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="verifyDesc != null">verify_desc = #{verifyDesc},</if>
+            <if test="talk != null">talk = #{talk},</if>
+            <if test="advanceMoney != null">advance_money = #{advanceMoney},</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show = #{ifCwDetailShow},</if>
+            <if test="processInsId != null">process_ins_id = #{processInsId},</if>
+        </trim>
+        where cw_out_work_id = #{cwOutWorkId}
+    </update>
+
+    <delete id="deleteCwOutWorkById" parameterType="Long">
+        delete from cw_out_work where cw_out_work_id = #{cwOutWorkId}
+    </delete>
+
+    <delete id="deleteCwOutWorkByIds" parameterType="String">
+        delete from cw_out_work where cw_out_work_id in 
+        <foreach item="cwOutWorkId" collection="array" open="(" separator="," close=")">
+            #{cwOutWorkId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteCwOutWorkitemByCwOutWorkIds" parameterType="String">
+        delete from cw_out_workitem where cw_out_work_id in 
+        <foreach item="cwOutWorkId" collection="array" open="(" separator="," close=")">
+            #{cwOutWorkId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCwOutWorkitemByCwOutWorkId" parameterType="Long">
+        delete from cw_out_workitem where cw_out_work_id = #{cwOutWorkId}
+    </delete>
+
+    <insert id="batchCwOutWorkitem">
+        insert all
+        <foreach item="item" index="index" collection="list">
+            into cw_out_workitem( cw_out_workitem_id, cw_out_work_id, from_date, to_date, day_sum, hour_sum, remark, hritems_id) values ( #{item.cwOutWorkitemId}, #{item.cwOutWorkId}, #{item.fromDate}, #{item.toDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.hritemsId})
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+</mapper>

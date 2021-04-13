@@ -2,6 +2,7 @@ package com.ruoyi.ee.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.utils.ShiroUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -15,6 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  */
 public class WfPhOught extends BaseEntity
 {
+
     private static final long serialVersionUID = 1L;
 
     /** 主键 */

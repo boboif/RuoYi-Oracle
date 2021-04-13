@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.CwExtraWorkMapper">
+    
+    <resultMap type="CwExtraWork" id="CwExtraWorkResult">
+        <result property="cwExtraWorkId"    column="cw_extra_work_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="allDays"    column="all_days"    />
+        <result property="allHours"    column="all_hours"    />
+        <result property="status"    column="status"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createId"    column="create_id"    />
+        <result property="verifyDesc"    column="verify_desc"    />
+        <result property="talk"    column="talk"    />
+        <result property="ifCwDetailShow"    column="if_cw_detail_show"    />
+        <result property="processInsId"    column="process_ins_id"    />
+        <result property="hritemsId"    column="hritems_id"    />
+    </resultMap>
+
+    <resultMap id="CwExtraWorkCwExtraWorkitemResult" type="CwExtraWork" extends="CwExtraWorkResult">
+        <collection property="cwExtraWorkitemList" notNullColumn="cw_extra_workitem_id" javaType="java.util.List" resultMap="CwExtraWorkitemResult" />
+    </resultMap>
+
+    <resultMap type="CwExtraWorkitem" id="CwExtraWorkitemResult">
+        <result property="cwExtraWorkitemId"    column="cw_extra_workitem_id"    />
+        <result property="cwExtraWorkId"    column="cw_extra_work_id"    />
+        <result property="toDate"    column="to_date"    />
+        <result property="fromDate"    column="from_date"    />
+        <result property="daySum"    column="day_sum"    />
+        <result property="hourSum"    column="hour_sum"    />
+        <result property="remark"    column="remark"    />
+        <result property="benefitDouble"    column="benefit_double"    />
+        <result property="hritemsId"    column="hritems_id"    />
+        <result property="payWay"    column="pay_way"    />
+    </resultMap>
+
+    <sql id="selectCwExtraWorkVo">
+        select cw_extra_work_id, onoff_station_id, all_days, all_hours, status, create_date, create_id, verify_desc, talk, if_cw_detail_show, process_ins_id, hritems_id from cw_extra_work
+    </sql>
+
+    <select id="selectCwExtraWorkList" parameterType="CwExtraWork" resultMap="CwExtraWorkResult">
+        <include refid="selectCwExtraWorkVo"/>
+        <where>  
+            <if test="allDays != null "> and all_days = #{allDays}</if>
+            <if test="allHours != null "> and all_hours = #{allHours}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="verifyDesc != null  and verifyDesc != ''"> and verify_desc = #{verifyDesc}</if>
+            <if test="talk != null  and talk != ''"> and talk = #{talk}</if>
+            <if test="hritemsId != null "> and hritems_id = #{hritemsId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCwExtraWorkById" parameterType="Long" resultMap="CwExtraWorkCwExtraWorkitemResult">
+        select a.cw_extra_work_id, a.onoff_station_id, a.all_days, a.all_hours, a.status, a.create_date, a.create_id, a.verify_desc, a.talk, a.if_cw_detail_show, a.process_ins_id, a.hritems_id,
+            b.cw_extra_workitem_id, b.cw_extra_work_id, b.to_date, b.from_date, b.day_sum, b.hour_sum, b.remark, b.benefit_double, b.hritems_id, b.pay_way
+        from cw_extra_work a
+        left join cw_extra_workitem b on b.cw_extra_work_id = a.cw_extra_work_id
+        where a.cw_extra_work_id = #{cwExtraWorkId}
+    </select>
+        
+    <insert id="insertCwExtraWork" parameterType="CwExtraWork">
+        <selectKey keyProperty="cwExtraWorkId" resultType="long" order="BEFORE">
+            SELECT seq_cw_extra_work.NEXTVAL as cwExtraWorkId FROM DUAL
+        </selectKey>
+        insert into cw_extra_work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cwExtraWorkId != null">cw_extra_work_id,</if>
+            <if test="onoffStationId != null">onoff_station_id,</if>
+            <if test="allDays != null">all_days,</if>
+            <if test="allHours != null">all_hours,</if>
+            <if test="status != null">status,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="verifyDesc != null">verify_desc,</if>
+            <if test="talk != null">talk,</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show,</if>
+            <if test="processInsId != null">process_ins_id,</if>
+            <if test="hritemsId != null">hritems_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cwExtraWorkId != null">#{cwExtraWorkId},</if>
+            <if test="onoffStationId != null">#{onoffStationId},</if>
+            <if test="allDays != null">#{allDays},</if>
+            <if test="allHours != null">#{allHours},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="verifyDesc != null">#{verifyDesc},</if>
+            <if test="talk != null">#{talk},</if>
+            <if test="ifCwDetailShow != null">#{ifCwDetailShow},</if>
+            <if test="processInsId != null">#{processInsId},</if>
+            <if test="hritemsId != null">#{hritemsId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCwExtraWork" parameterType="CwExtraWork">
+        update cw_extra_work
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onoffStationId != null">onoff_station_id = #{onoffStationId},</if>
+            <if test="allDays != null">all_days = #{allDays},</if>
+            <if test="allHours != null">all_hours = #{allHours},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="verifyDesc != null">verify_desc = #{verifyDesc},</if>
+            <if test="talk != null">talk = #{talk},</if>
+            <if test="ifCwDetailShow != null">if_cw_detail_show = #{ifCwDetailShow},</if>
+            <if test="processInsId != null">process_ins_id = #{processInsId},</if>
+            <if test="hritemsId != null">hritems_id = #{hritemsId},</if>
+        </trim>
+        where cw_extra_work_id = #{cwExtraWorkId}
+    </update>
+
+    <delete id="deleteCwExtraWorkById" parameterType="Long">
+        delete from cw_extra_work where cw_extra_work_id = #{cwExtraWorkId}
+    </delete>
+
+    <delete id="deleteCwExtraWorkByIds" parameterType="String">
+        delete from cw_extra_work where cw_extra_work_id in 
+        <foreach item="cwExtraWorkId" collection="array" open="(" separator="," close=")">
+            #{cwExtraWorkId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteCwExtraWorkitemByCwExtraWorkIds" parameterType="String">
+        delete from cw_extra_workitem where cw_extra_work_id in 
+        <foreach item="cwExtraWorkId" collection="array" open="(" separator="," close=")">
+            #{cwExtraWorkId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCwExtraWorkitemByCwExtraWorkId" parameterType="Long">
+        delete from cw_extra_workitem where cw_extra_work_id = #{cwExtraWorkId}
+    </delete>
+
+    <insert id="batchCwExtraWorkitem">
+        insert all
+        <foreach item="item" index="index" collection="list">
+            into cw_extra_workitem( cw_extra_workitem_id, cw_extra_work_id, to_date, from_date, day_sum, hour_sum, remark, benefit_double, hritems_id, pay_way) values ( #{item.cwExtraWorkitemId}, #{item.cwExtraWorkId}, #{item.toDate}, #{item.fromDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.benefitDouble}, #{item.hritemsId}, #{item.payWay})
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+</mapper>

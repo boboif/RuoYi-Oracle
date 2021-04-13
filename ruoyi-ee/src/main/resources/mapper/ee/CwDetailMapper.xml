@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.CwDetailMapper">
+    
+    <resultMap type="CwDetail" id="CwDetailResult">
+        <result property="cwDetailId"    column="cw_detail_id"    />
+        <result property="onoffStationId"    column="onoff_station_id"    />
+        <result property="workDay"    column="work_day"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="hourSum"    column="hour_sum"    />
+        <result property="payOrCut"    column="pay_or_cut"    />
+        <result property="payDouble"    column="pay_double"    />
+        <result property="cwMoney"    column="cw_money"    />
+        <result property="ifMixRest"    column="if_mix_rest"    />
+        <result property="hritemsId"    column="hritems_id"    />
+        <result property="wageMonth"    column="wage_month"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createId"    column="create_id"    />
+        <result property="modifyDate"    column="modify_date"    />
+        <result property="modifyId"    column="modify_id"    />
+        <result property="dr"    column="dr"    />
+        <result property="drId"    column="dr_id"    />
+        <result property="ifShow"    column="if_show"    />
+        <result property="errorCode"    column="error_code"    />
+        <result property="psnId"    column="psn_id"    />
+        <result property="errorDetail"    column="error_detail"    />
+        <result property="wsrId"    column="wsr_id"    />
+        <result property="waDataId"    column="wa_data_id"    />
+        <result property="empOutExplain"    column="emp_out_explain"    />
+        <result property="drDate"    column="dr_date"    />
+        <result property="downloadTime"    column="download_time"    />
+        <result property="cutRatio"    column="cut_ratio"    />
+        <result property="daySum"    column="day_sum"    />
+        <result property="belongYear"    column="belong_year"    />
+        <result property="phOughtId"    column="ph_ought_id"    />
+    </resultMap>
+
+    <sql id="selectCwDetailVo">
+        select cw_detail_id, onoff_station_id, work_day, start_date, end_date, hour_sum, pay_or_cut, pay_double, cw_money, if_mix_rest, hritems_id, wage_month, create_date, create_id, modify_date, modify_id, dr, dr_id, if_show, error_code, psn_id, error_detail, wsr_id, wa_data_id, emp_out_explain, dr_date, download_time, cut_ratio, day_sum, belong_year, ph_ought_id from cw_detail
+    </sql>
+
+    <select id="selectCwDetailList" parameterType="CwDetail" resultMap="CwDetailResult">
+        <include refid="selectCwDetailVo"/>
+        <where>  
+            <if test="workDay != null "> and work_day = #{workDay}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="hourSum != null "> and hour_sum = #{hourSum}</if>
+            <if test="payOrCut != null "> and pay_or_cut = #{payOrCut}</if>
+            <if test="payDouble != null "> and pay_double = #{payDouble}</if>
+            <if test="cwMoney != null "> and cw_money = #{cwMoney}</if>
+            <if test="ifMixRest != null "> and if_mix_rest = #{ifMixRest}</if>
+            <if test="hritemsId != null "> and hritems_id = #{hritemsId}</if>
+            <if test="wageMonth != null "> and wage_month = #{wageMonth}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="modifyDate != null "> and modify_date = #{modifyDate}</if>
+            <if test="modifyId != null "> and modify_id = #{modifyId}</if>
+            <if test="dr != null "> and dr = #{dr}</if>
+            <if test="drId != null "> and dr_id = #{drId}</if>
+            <if test="ifShow != null "> and if_show = #{ifShow}</if>
+            <if test="errorCode != null "> and error_code = #{errorCode}</if>
+            <if test="psnId != null "> and psn_id = #{psnId}</if>
+            <if test="errorDetail != null  and errorDetail != ''"> and error_detail = #{errorDetail}</if>
+            <if test="waDataId != null "> and wa_data_id = #{waDataId}</if>
+            <if test="empOutExplain != null  and empOutExplain != ''"> and emp_out_explain = #{empOutExplain}</if>
+            <if test="cutRatio != null "> and cut_ratio = #{cutRatio}</if>
+            <if test="daySum != null "> and day_sum = #{daySum}</if>
+            <if test="belongYear != null "> and belong_year = #{belongYear}</if>
+        </where>
+    </select>
+    
+    <select id="selectCwDetailById" parameterType="Long" resultMap="CwDetailResult">
+        <include refid="selectCwDetailVo"/>
+        where cw_detail_id = #{cwDetailId}
+    </select>
+        
+    <insert id="insertCwDetail" parameterType="CwDetail">
+        <selectKey keyProperty="cwDetailId" resultType="long" order="BEFORE">
+            SELECT seq_cw_detail.NEXTVAL as cwDetailId FROM DUAL
+        </selectKey>
+        insert into cw_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cwDetailId != null">cw_detail_id,</if>
+            <if test="onoffStationId != null">onoff_station_id,</if>
+            <if test="workDay != null">work_day,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="hourSum != null">hour_sum,</if>
+            <if test="payOrCut != null">pay_or_cut,</if>
+            <if test="payDouble != null">pay_double,</if>
+            <if test="cwMoney != null">cw_money,</if>
+            <if test="ifMixRest != null">if_mix_rest,</if>
+            <if test="hritemsId != null">hritems_id,</if>
+            <if test="wageMonth != null">wage_month,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="modifyDate != null">modify_date,</if>
+            <if test="modifyId != null">modify_id,</if>
+            <if test="dr != null">dr,</if>
+            <if test="drId != null">dr_id,</if>
+            <if test="ifShow != null">if_show,</if>
+            <if test="errorCode != null">error_code,</if>
+            <if test="psnId != null">psn_id,</if>
+            <if test="errorDetail != null">error_detail,</if>
+            <if test="wsrId != null">wsr_id,</if>
+            <if test="waDataId != null">wa_data_id,</if>
+            <if test="empOutExplain != null">emp_out_explain,</if>
+            <if test="drDate != null">dr_date,</if>
+            <if test="downloadTime != null">download_time,</if>
+            <if test="cutRatio != null">cut_ratio,</if>
+            <if test="daySum != null">day_sum,</if>
+            <if test="belongYear != null">belong_year,</if>
+            <if test="phOughtId != null">ph_ought_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cwDetailId != null">#{cwDetailId},</if>
+            <if test="onoffStationId != null">#{onoffStationId},</if>
+            <if test="workDay != null">#{workDay},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="hourSum != null">#{hourSum},</if>
+            <if test="payOrCut != null">#{payOrCut},</if>
+            <if test="payDouble != null">#{payDouble},</if>
+            <if test="cwMoney != null">#{cwMoney},</if>
+            <if test="ifMixRest != null">#{ifMixRest},</if>
+            <if test="hritemsId != null">#{hritemsId},</if>
+            <if test="wageMonth != null">#{wageMonth},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="modifyDate != null">#{modifyDate},</if>
+            <if test="modifyId != null">#{modifyId},</if>
+            <if test="dr != null">#{dr},</if>
+            <if test="drId != null">#{drId},</if>
+            <if test="ifShow != null">#{ifShow},</if>
+            <if test="errorCode != null">#{errorCode},</if>
+            <if test="psnId != null">#{psnId},</if>
+            <if test="errorDetail != null">#{errorDetail},</if>
+            <if test="wsrId != null">#{wsrId},</if>
+            <if test="waDataId != null">#{waDataId},</if>
+            <if test="empOutExplain != null">#{empOutExplain},</if>
+            <if test="drDate != null">#{drDate},</if>
+            <if test="downloadTime != null">#{downloadTime},</if>
+            <if test="cutRatio != null">#{cutRatio},</if>
+            <if test="daySum != null">#{daySum},</if>
+            <if test="belongYear != null">#{belongYear},</if>
+            <if test="phOughtId != null">#{phOughtId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCwDetail" parameterType="CwDetail">
+        update cw_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onoffStationId != null">onoff_station_id = #{onoffStationId},</if>
+            <if test="workDay != null">work_day = #{workDay},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="hourSum != null">hour_sum = #{hourSum},</if>
+            <if test="payOrCut != null">pay_or_cut = #{payOrCut},</if>
+            <if test="payDouble != null">pay_double = #{payDouble},</if>
+            <if test="cwMoney != null">cw_money = #{cwMoney},</if>
+            <if test="ifMixRest != null">if_mix_rest = #{ifMixRest},</if>
+            <if test="hritemsId != null">hritems_id = #{hritemsId},</if>
+            <if test="wageMonth != null">wage_month = #{wageMonth},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="modifyDate != null">modify_date = #{modifyDate},</if>
+            <if test="modifyId != null">modify_id = #{modifyId},</if>
+            <if test="dr != null">dr = #{dr},</if>
+            <if test="drId != null">dr_id = #{drId},</if>
+            <if test="ifShow != null">if_show = #{ifShow},</if>
+            <if test="errorCode != null">error_code = #{errorCode},</if>
+            <if test="psnId != null">psn_id = #{psnId},</if>
+            <if test="errorDetail != null">error_detail = #{errorDetail},</if>
+            <if test="wsrId != null">wsr_id = #{wsrId},</if>
+            <if test="waDataId != null">wa_data_id = #{waDataId},</if>
+            <if test="empOutExplain != null">emp_out_explain = #{empOutExplain},</if>
+            <if test="drDate != null">dr_date = #{drDate},</if>
+            <if test="downloadTime != null">download_time = #{downloadTime},</if>
+            <if test="cutRatio != null">cut_ratio = #{cutRatio},</if>
+            <if test="daySum != null">day_sum = #{daySum},</if>
+            <if test="belongYear != null">belong_year = #{belongYear},</if>
+            <if test="phOughtId != null">ph_ought_id = #{phOughtId},</if>
+        </trim>
+        where cw_detail_id = #{cwDetailId}
+    </update>
+
+    <delete id="deleteCwDetailById" parameterType="Long">
+        delete from cw_detail where cw_detail_id = #{cwDetailId}
+    </delete>
+
+    <delete id="deleteCwDetailByIds" parameterType="String">
+        delete from cw_detail where cw_detail_id in 
+        <foreach item="cwDetailId" collection="array" open="(" separator="," close=")">
+            #{cwDetailId}
+        </foreach>
+    </delete>
+</mapper>
