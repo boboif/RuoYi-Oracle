@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.WorkflowMapper">
+
+    <select id="startProcess" parameterType="map" statementType="CALLABLE">
+        {
+        call pck_wkf.startProcess(
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{applicantOosId,mode=IN,jdbcType=NUMERIC},
+            #{formTableName,mode=IN,jdbcType=VARCHAR},
+            #{formTableCdn,mode=IN,jdbcType=VARCHAR},
+            <if test="processDefId != null and processDefId !=''">
+                #{processDefId,mode=IN,jdbcType=NUMERIC},
+            </if>
+        </trim>
+        )
+        }
+    </select>
+    <select id="nextProcess" parameterType="map" statementType="CALLABLE">
+        {
+            call pck_wkf.nextProcess(
+                #{applicantOosId,mode=IN,jdbcType=NUMERIC},
+                #{approverOosId,mode=IN,jdbcType=NUMERIC},
+                #{workItemId,mode=IN,jdbcType=NUMERIC},
+                #{actionTag,mode=IN,jdbcType=VARCHAR},
+                #{retVar,mode=OUT,jdbcType=VARCHAR}
+            )
+        }
+    </select>
+
+
+    <select id="apply" parameterType="map" statementType="CALLABLE">
+        {
+            call apply(
+                #{p1,mode=IN,jdbcType=NUMERIC},
+                #{p2,mode=IN,jdbcType=NUMERIC}
+            )
+        }
+    </select>
+    <select id="approve" parameterType="map" statementType="CALLABLE">
+        {
+            call approve(
+                #{p1,mode=IN,jdbcType=NUMERIC},
+                #{p2,mode=IN,jdbcType=NUMERIC}
+            )
+        }
+    </select>
+    <select id="reject" parameterType="map" statementType="CALLABLE">
+        {
+            call reject(
+                #{p1,mode=IN,jdbcType=NUMERIC},
+                #{p2,mode=IN,jdbcType=NUMERIC}
+            )
+        }
+    </select>
+
+
+</mapper>

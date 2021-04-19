@@ -1,10 +1,17 @@
 package com.ruoyi.ee.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.utils.ShiroUtils;
+import com.ruoyi.ee.domain.CwExtraWork;
+import com.ruoyi.ee.service.WorkFlowService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +40,8 @@ public class CwExtraWorkController extends BaseController
 
     @Autowired
     private ICwExtraWorkService cwExtraWorkService;
-
+    @Autowired
+    private WorkFlowService workFlowService;
     @RequiresPermissions("ee:ot:view")
     @GetMapping()
     public String ot()
@@ -81,13 +89,44 @@ public class CwExtraWorkController extends BaseController
      * 新增保存加班管理
      */
     @RequiresPermissions("ee:ot:add")
-    @Log(title = "加班管理", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
+    @Log(title = "加班申请", businessType = BusinessType.INSERT)
+    @PostMapping("/apply")
     @ResponseBody
-    public AjaxResult addSave(CwExtraWork cwExtraWork)
-    {
-        return toAjax(cwExtraWorkService.insertCwExtraWork(cwExtraWork));
+    public AjaxResult apply(CwExtraWork cwExtraWork) {
+        cwExtraWork.setStatus(1L);
+        AjaxResult ajaxResult =null;
+        if (StringUtils.isEmpty(cwExtraWork.getCwExtraWorkId())) {
+            cwExtraWorkService.updateCwExtraWork(cwExtraWork);
+        }else{
+            cwExtraWorkService.insertCwExtraWork(cwExtraWork);
+        }
+        Map map = new HashMap<String,String>();
+        map.put("applicantOosId", ShiroUtils.getOosId());
+        map.put("formTableName","CW_EXTRA_WORK");
+        map.put("formTableCdn","'CW_EXTRA_WORK_ID="+ cwExtraWork.getCwExtraWorkId()+"'");
+        map.put("","");
+        workFlowService.startProcess(map);
+        return success();
     }
+
+    /**
+     * 新增保存假期申请
+     */
+    @RequiresPermissions("ee:holiday:add")
+    @Log(title = "加班保存", businessType = BusinessType.INSERT)
+    @PostMapping("/save")
+    @ResponseBody
+    public AjaxResult save(CwExtraWork cwExtraWork) {
+        cwExtraWork.setStatus(0L);
+        AjaxResult ajaxResult =null;
+        if (StringUtils.isEmpty(cwExtraWork.getCwExtraWorkId())) {
+            ajaxResult=toAjax(cwExtraWorkService.updateCwExtraWork(cwExtraWork));
+        }else{
+            ajaxResult =toAjax(cwExtraWorkService.insertCwExtraWork(cwExtraWork));
+        }
+        return ajaxResult;
+    }
+
 
     /**
      * 修改加班管理
