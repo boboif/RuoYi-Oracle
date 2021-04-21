@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ee.mapper.WkfApproveQueryMapper">
+    
+    <resultMap type="WkfApproveQuery" id="WkfApproveQueryResult">
+        <result property="processInsId"    column="process_ins_id"    />
+        <result property="processDefId"    column="process_def_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="starter"    column="starter"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectWkfApproveQueryVo">
+        select process_ins_id, process_def_id, start_time, end_time, starter, status from wkf_process_ins
+    </sql>
+
+    <select id="selectWkfApproveQueryList" parameterType="WkfApproveQuery" resultMap="WkfApproveQueryResult">
+        <include refid="selectWkfApproveQueryVo"/>
+        <where>  
+            <if test="processDefId != null "> and process_def_id = #{processDefId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="starter != null "> and starter = #{starter}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectWkfApproveQueryById" parameterType="Long" resultMap="WkfApproveQueryResult">
+        <include refid="selectWkfApproveQueryVo"/>
+        where process_ins_id = #{processInsId}
+    </select>
+        
+    <insert id="insertWkfApproveQuery" parameterType="WkfApproveQuery">
+        <selectKey keyProperty="processInsId" resultType="long" order="BEFORE">
+            SELECT seq_wkf_process_ins.NEXTVAL as processInsId FROM DUAL
+        </selectKey>
+        insert into wkf_process_ins
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processInsId != null">process_ins_id,</if>
+            <if test="processDefId != null">process_def_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="starter != null">starter,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processInsId != null">#{processInsId},</if>
+            <if test="processDefId != null">#{processDefId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="starter != null">#{starter},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWkfApproveQuery" parameterType="WkfApproveQuery">
+        update wkf_process_ins
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="processDefId != null">process_def_id = #{processDefId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="starter != null">starter = #{starter},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where process_ins_id = #{processInsId}
+    </update>
+
+    <delete id="deleteWkfApproveQueryById" parameterType="Long">
+        delete from wkf_process_ins where process_ins_id = #{processInsId}
+    </delete>
+
+    <delete id="deleteWkfApproveQueryByIds" parameterType="String">
+        delete from wkf_process_ins where process_ins_id in 
+        <foreach item="processInsId" collection="array" open="(" separator="," close=")">
+            #{processInsId}
+        </foreach>
+    </delete>
+</mapper>
