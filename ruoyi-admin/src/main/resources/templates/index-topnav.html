@@ -216,17 +216,17 @@
                     <!-- 顶部菜单列表 -->
 	                <th:block th:each="menu : ${menus}">
                	    <li role="presentation" th:id="|tab_${menu.menuId}|">
-                        <a data-toggle="tab" th:class="@{${!#strings.isEmpty(menu.target) && menu.target == 'menuBlank'} ? 'menuBlank'}" th:href="@{${!#strings.isEmpty(menu.target) && menu.target == 'menuBlank'} ? ${menu.url} : |#menu_${menu.menuId}|}">
+                        <a data-toggle="tab" th:class="@{(${!#strings.isEmpty(menu.target) && menu.target == 'menuBlank'} ? 'menuBlank':( ${!#strings.isEmpty(menu.target) && menu.target == 'menuItem'  && menu.url!='#'} ? 'menuItem'  ) )}" th:href="@{${!#strings.isEmpty(menu.target) &&  menu.url!='#' && (menu.target == 'menuBlank' || menu.target == 'menuItem')} ? @{${menu.url}} : |#menu_${menu.menuId}|}">
                             <i th:class="${menu.icon}"></i> <span>[[${menu.menuName}]]</span>
                         </a>
                     </li>
 	                </th:block>
 	                
-	                <li role="presentation" id="tab_index">
+	      <!--          <li role="presentation" id="tab_index">
                       <a data-toggle="tab" href="#index">
                         <i class="fa fa-area-chart"></i> <span>统计报表</span>
                       </a>
-                    </li>
+                    </li>-->
                     
                     <li role="presentation" id="tab_demo" th:if="${demoEnabled}">
                       <a data-toggle="tab" href="#demo">
