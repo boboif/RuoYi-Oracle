@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.ee.domain.WkfApproveQuery;
-import com.ruoyi.ee.service.IWkfApproveQueryService;
+import com.ruoyi.ee.service.IWkfApproveService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -27,12 +27,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @Controller
 @RequestMapping("/ee/approve")
-public class WkfApproveQueryController extends BaseController
+public class WkfApproveController extends BaseController
 {
     private String prefix = "ee/approve";
 
     @Autowired
-    private IWkfApproveQueryService wkfApproveQueryService;
+    private IWkfApproveService wkfApproveQueryService;
 
     @RequiresPermissions("ee:approve:view")
     @GetMapping()

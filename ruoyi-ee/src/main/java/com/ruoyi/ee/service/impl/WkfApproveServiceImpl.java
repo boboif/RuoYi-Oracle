@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.ee.mapper.WkfApproveQueryMapper;
 import com.ruoyi.ee.domain.WkfApproveQuery;
-import com.ruoyi.ee.service.IWkfApproveQueryService;
+import com.ruoyi.ee.service.IWkfApproveService;
 import com.ruoyi.common.core.text.Convert;
 
 /**
@@ -15,7 +15,7 @@ import com.ruoyi.common.core.text.Convert;
  * @date 2021-04-21
  */
 @Service
-public class WkfApproveQueryServiceImpl implements IWkfApproveQueryService 
+public class WkfApproveServiceImpl implements IWkfApproveService
 {
     @Autowired
     private WkfApproveQueryMapper wkfApproveQueryMapper;

@@ -9,7 +9,7 @@ import com.ruoyi.ee.domain.WkfApproveQuery;
  * @author hui
  * @date 2021-04-21
  */
-public interface IWkfApproveQueryService 
+public interface IWkfApproveService
 {
     /**
      * 查询审批
