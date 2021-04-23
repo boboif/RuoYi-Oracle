@@ -78,7 +78,6 @@ public class WfHolidayController extends BaseController {
      */
     @GetMapping("/add")
     public String add() {
-
         return prefix + "/add";
     }
 
@@ -92,7 +91,7 @@ public class WfHolidayController extends BaseController {
     public AjaxResult apply(WfHoliday wfHoliday) {
         wfHoliday.setStatus(1L);
         AjaxResult ajaxResult =null;
-        if (StringUtils.isEmpty(wfHoliday.getWfHolidayId())) {
+        if (!StringUtils.isEmpty(wfHoliday.getWfHolidayId())) {
              wfHolidayService.updateWfHoliday(wfHoliday);
         }else{
             wfHolidayService.insertWfHoliday(wfHoliday);
@@ -101,7 +100,7 @@ public class WfHolidayController extends BaseController {
         map.put("applicantOosId", ShiroUtils.getOosId());
         map.put("formTableName","WF_HOLIDAY");
         map.put("formTableCdn","'WF_HOLIDAY_ID="+ wfHoliday.getWfHolidayId()+"'");
-        map.put("","");
+        map.put("processDefId","1");
         workFlowService.startProcess(map);
         return success();
     }
@@ -116,7 +115,7 @@ public class WfHolidayController extends BaseController {
     public AjaxResult save(WfHoliday wfHoliday) {
         wfHoliday.setStatus(0L);
         AjaxResult ajaxResult =null;
-        if (StringUtils.isEmpty(wfHoliday.getWfHolidayId())) {
+        if (!StringUtils.isEmpty(wfHoliday.getWfHolidayId())) {
             ajaxResult=toAjax(wfHolidayService.updateWfHoliday(wfHoliday));
         }else{
             ajaxResult =toAjax(wfHolidayService.insertWfHoliday(wfHoliday));

@@ -42,7 +42,17 @@ public class WkfApproveQuery extends BaseEntity
     @Excel(name = "状态")
     private Long status;
 
-    public void setProcessInsId(Long processInsId) 
+    private String processShortName;
+
+    public String getProcessShortName() {
+        return processShortName;
+    }
+
+    public void setProcessShortName(String processShortName) {
+        this.processShortName = processShortName;
+    }
+
+    public void setProcessInsId(Long processInsId)
     {
         this.processInsId = processInsId;
     }

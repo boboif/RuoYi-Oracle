@@ -38,7 +38,7 @@ public class WkfApproveController extends BaseController
     @GetMapping()
     public String approve()
     {
-        return prefix + "/approve";
+        return prefix + "/approveList";
     }
 
     /**
@@ -50,7 +50,7 @@ public class WkfApproveController extends BaseController
     public TableDataInfo list(WkfApproveQuery wkfApproveQuery)
     {
         startPage();
-        List<WkfApproveQuery> list = wkfApproveQueryService.selectWkfApproveQueryList(wkfApproveQuery);
+        List<WkfApproveQuery> list = wkfApproveQueryService.selectWkfApproveList(wkfApproveQuery);
         return getDataTable(list);
     }
 
@@ -63,7 +63,7 @@ public class WkfApproveController extends BaseController
     @ResponseBody
     public AjaxResult export(WkfApproveQuery wkfApproveQuery)
     {
-        List<WkfApproveQuery> list = wkfApproveQueryService.selectWkfApproveQueryList(wkfApproveQuery);
+        List<WkfApproveQuery> list = wkfApproveQueryService.selectWkfApproveList(wkfApproveQuery);
         ExcelUtil<WkfApproveQuery> util = new ExcelUtil<WkfApproveQuery>(WkfApproveQuery.class);
         return util.exportExcel(list, "approve");
     }
@@ -86,18 +86,18 @@ public class WkfApproveController extends BaseController
     @ResponseBody
     public AjaxResult addSave(WkfApproveQuery wkfApproveQuery)
     {
-        return toAjax(wkfApproveQueryService.insertWkfApproveQuery(wkfApproveQuery));
+        return toAjax(wkfApproveQueryService.insertWkfApprove(wkfApproveQuery));
     }
 
     /**
-     * 修改审批
+     * 审批
      */
-    @GetMapping("/edit/{processInsId}")
-    public String edit(@PathVariable("processInsId") Long processInsId, ModelMap mmap)
+    @GetMapping("/approveForm/{processInsId}")
+    public String approveForm(@PathVariable("processInsId") Long processInsId, ModelMap mmap)
     {
-        WkfApproveQuery wkfApproveQuery = wkfApproveQueryService.selectWkfApproveQueryById(processInsId);
+        WkfApproveQuery wkfApproveQuery = wkfApproveQueryService.selectWkfApproveById(processInsId);
         mmap.put("wkfApproveQuery", wkfApproveQuery);
-        return prefix + "/edit";
+        return prefix + "/approveForm";
     }
 
     /**
@@ -109,7 +109,7 @@ public class WkfApproveController extends BaseController
     @ResponseBody
     public AjaxResult editSave(WkfApproveQuery wkfApproveQuery)
     {
-        return toAjax(wkfApproveQueryService.updateWkfApproveQuery(wkfApproveQuery));
+        return toAjax(wkfApproveQueryService.updateWkfApprove(wkfApproveQuery));
     }
 
     /**
@@ -121,6 +121,6 @@ public class WkfApproveController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(wkfApproveQueryService.deleteWkfApproveQueryByIds(ids));
+        return toAjax(wkfApproveQueryService.deleteWkfApproveByIds(ids));
     }
 }

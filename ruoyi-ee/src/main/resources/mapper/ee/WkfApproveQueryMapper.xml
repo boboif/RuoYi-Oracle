@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="endTime"    column="end_time"    />
         <result property="starter"    column="starter"    />
         <result property="status"    column="status"    />
+        <result property="processShortName"    column="PROCESS_SHORT_NAME"/>
     </resultMap>
 
     <sql id="selectWkfApproveQueryVo">
@@ -18,7 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectWkfApproveQueryList" parameterType="WkfApproveQuery" resultMap="WkfApproveQueryResult">
-        <include refid="selectWkfApproveQueryVo"/>
+        select pi.process_ins_id, pi.process_def_id, pi.start_time, pi.end_time, pi.starter, pi.status,df.PROCESS_SHORT_NAME from wkf_process_ins pi
+        left join WKF_PROCESS_DEF df on df.process_def_id = pi.process_def_id
         <where>  
             <if test="processDefId != null "> and process_def_id = #{processDefId}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>

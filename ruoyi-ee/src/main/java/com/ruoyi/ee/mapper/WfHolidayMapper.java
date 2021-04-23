@@ -80,7 +80,7 @@ public interface WfHolidayMapper
     /**
      * 通过假期申请ID删除请假明细信息
      * 
-     * @param roleId 角色ID
+     * @param
      * @return 结果
      */
     public int deleteWfHolidayItemByWfHolidayId(Long wfHolidayId);

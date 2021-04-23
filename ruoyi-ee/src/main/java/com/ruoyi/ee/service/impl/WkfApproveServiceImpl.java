@@ -27,7 +27,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 审批
      */
     @Override
-    public WkfApproveQuery selectWkfApproveQueryById(Long processInsId)
+    public WkfApproveQuery selectWkfApproveById(Long processInsId)
     {
         return wkfApproveQueryMapper.selectWkfApproveQueryById(processInsId);
     }
@@ -39,7 +39,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 审批
      */
     @Override
-    public List<WkfApproveQuery> selectWkfApproveQueryList(WkfApproveQuery wkfApproveQuery)
+    public List<WkfApproveQuery> selectWkfApproveList(WkfApproveQuery wkfApproveQuery)
     {
         return wkfApproveQueryMapper.selectWkfApproveQueryList(wkfApproveQuery);
     }
@@ -51,7 +51,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 结果
      */
     @Override
-    public int insertWkfApproveQuery(WkfApproveQuery wkfApproveQuery)
+    public int insertWkfApprove(WkfApproveQuery wkfApproveQuery)
     {
         return wkfApproveQueryMapper.insertWkfApproveQuery(wkfApproveQuery);
     }
@@ -63,7 +63,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 结果
      */
     @Override
-    public int updateWkfApproveQuery(WkfApproveQuery wkfApproveQuery)
+    public int updateWkfApprove(WkfApproveQuery wkfApproveQuery)
     {
         return wkfApproveQueryMapper.updateWkfApproveQuery(wkfApproveQuery);
     }
@@ -75,7 +75,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 结果
      */
     @Override
-    public int deleteWkfApproveQueryByIds(String ids)
+    public int deleteWkfApproveByIds(String ids)
     {
         return wkfApproveQueryMapper.deleteWkfApproveQueryByIds(Convert.toStrArray(ids));
     }
@@ -87,7 +87,7 @@ public class WkfApproveServiceImpl implements IWkfApproveService
      * @return 结果
      */
     @Override
-    public int deleteWkfApproveQueryById(Long processInsId)
+    public int deleteWkfApproveById(Long processInsId)
     {
         return wkfApproveQueryMapper.deleteWkfApproveQueryById(processInsId);
     }

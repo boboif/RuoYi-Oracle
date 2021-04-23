@@ -242,7 +242,7 @@
                     $.modal.alertWarning('请添加您的假期明细信息');
                     return;
                 }
-                $.operate.save(prefix + "/apply", $('#form-holiday-add').serialize());
+                $.operate.save(prefix + "/apply", $('#form-holiday-edit').serialize());
             }
         }
         function saveHandler() {
@@ -250,7 +250,7 @@
                 if(checkList()==false){
                     return;
                 }
-                $.operate.save(prefix + "/save", $('#form-holiday-add').serialize());
+                $.operate.save(prefix + "/save", $('#form-holiday-edit').serialize());
             }
         }
         function checkList(){
