@@ -5,18 +5,16 @@
 <mapper namespace="com.ruoyi.ee.mapper.WorkflowMapper">
 
     <select id="startProcess" parameterType="map" statementType="CALLABLE">
-        {
-        call pck_wkf.startProcess(
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{applicantOosId,mode=IN,jdbcType=NUMERIC},
-            #{formTableName,mode=IN,jdbcType=VARCHAR},
-            #{formTableCdn,mode=IN,jdbcType=VARCHAR},
-            <if test="processDefId != null and processDefId !=''">
-                #{processDefId,mode=IN,jdbcType=NUMERIC},
-            </if>
-        </trim>
-        )
-        }
+{call pck_wkf.startProcess
+<trim prefix="(" suffix=")" suffixOverrides=",">
+#{applicantOosId,mode=IN,jdbcType=NUMERIC},
+#{formTableName,mode=IN,jdbcType=VARCHAR},
+#{formTableCdn,mode=IN,jdbcType=VARCHAR},
+<if test="processDefId != null and processDefId !=''">
+#{processDefId,mode=IN,jdbcType=NUMERIC},
+</if>
+</trim>
+}
     </select>
     <select id="nextProcess" parameterType="map" statementType="CALLABLE">
         {

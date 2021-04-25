@@ -38,7 +38,7 @@ public class WfHoliday extends BaseEntity {
      * 总天数
      */
     @Excel(name = "总天数")
-    private Long allDays;
+    private Double allDays;
 
     /**
      * 总时数
@@ -111,11 +111,11 @@ public class WfHoliday extends BaseEntity {
         return hritemsId;
     }
 
-    public void setAllDays(Long allDays) {
+    public void setAllDays(Double allDays) {
         this.allDays = allDays;
     }
 
-    public Long getAllDays() {
+    public Double getAllDays() {
         return allDays;
     }
 

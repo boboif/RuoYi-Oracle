@@ -151,6 +151,7 @@
                     },
                    events: window.operatEvents = {
                         'change #fromDate': function (e, value, row, index) {
+                            console.log(row)
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
                             let fDate ='';
                             if(row.holidayType==1){

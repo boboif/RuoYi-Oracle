@@ -10,6 +10,7 @@ import com.ruoyi.ee.service.WorkFlowService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,6 +89,7 @@ public class WfHolidayController extends BaseController {
     @Log(title = "假期申请", businessType = BusinessType.INSERT)
     @PostMapping("/apply")
     @ResponseBody
+    @Transactional
     public AjaxResult apply(WfHoliday wfHoliday) {
         wfHoliday.setStatus(1L);
         AjaxResult ajaxResult =null;

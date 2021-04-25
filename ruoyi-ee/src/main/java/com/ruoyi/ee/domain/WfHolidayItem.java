@@ -25,18 +25,18 @@ public class WfHolidayItem extends BaseEntity
     private Long wfHolidayId;
 
     /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm" ,timezone="GMT+8")
     @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date fromDate;
 
     /** 截止时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm" ,timezone="GMT+8")
     @Excel(name = "截止时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date toDate;
 
     /** 天数小计 */
     @Excel(name = "天数小计")
-    private Long daySum;
+    private Double daySum;
 
     /** 时数小计 */
     @Excel(name = "时数小计")
@@ -90,12 +90,12 @@ public class WfHolidayItem extends BaseEntity
     {
         return toDate;
     }
-    public void setDaySum(Long daySum) 
+    public void setDaySum(Double daySum)
     {
         this.daySum = daySum;
     }
 
-    public Long getDaySum() 
+    public Double getDaySum()
     {
         return daySum;
     }

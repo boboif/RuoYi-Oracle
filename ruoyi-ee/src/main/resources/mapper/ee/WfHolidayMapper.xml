@@ -159,8 +159,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert all
         <foreach item="item" index="index" collection="list">
             into wf_holiday_item( wf_holiday_item_id, wf_holiday_id, from_date, to_date, day_sum, hour_sum, remark, pay_way, hritems_id, holiday_type)
-            values ( SEQ_WF_HOLIDAY.nextval, #{item.wfHolidayId}, #{item.fromDate}, #{item.toDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.payWay,jdbcType=INTEGER}, #{item.hritemsId,jdbcType=INTEGER}, #{item.holidayType,jdbcType=INTEGER})
+            values ( seq('SEQ_WF_HOLIDAY'), #{item.wfHolidayId}, #{item.fromDate}, #{item.toDate}, #{item.daySum,jdbcType=DOUBLE}, #{item.hourSum,jdbcType=INTEGER}, #{item.remark}, #{item.payWay,jdbcType=INTEGER}, #{item.hritemsId,jdbcType=INTEGER}, #{item.holidayType,jdbcType=INTEGER})
         </foreach>
         SELECT 1 FROM DUAL
     </insert>
+
 </mapper>
