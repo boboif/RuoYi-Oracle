@@ -3,55 +3,61 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.ee.mapper.WorkflowMapper">
+    <delete id="delWorkItem" parameterType="long">
+        delete from wkf_workitem where workitem_id=#{workItemId,mode=IN,jdbcType=BIGINT}
+    </delete>
+    <delete id="delProcessIns" parameterType="long">
+        delete from wkf_process_ins where process_ins_id=#{workItemId,mode=IN,jdbcType=BIGINT}
+    </delete>
 
     <select id="startProcess" parameterType="map" statementType="CALLABLE">
 {call pck_wkf.startProcess
 <trim prefix="(" suffix=")" suffixOverrides=",">
-#{applicantOosId,mode=IN,jdbcType=NUMERIC},
+#{applicantOosId,mode=IN,jdbcType=BIGINT},
 #{formTableName,mode=IN,jdbcType=VARCHAR},
 #{formTableCdn,mode=IN,jdbcType=VARCHAR},
 <if test="processDefId != null and processDefId !=''">
-#{processDefId,mode=IN,jdbcType=NUMERIC},
+#{processDefId,mode=IN,jdbcType=BIGINT},
 </if>
 </trim>
 }
     </select>
     <select id="nextProcess" parameterType="map" statementType="CALLABLE">
-        {
-            call pck_wkf.nextProcess(
-                #{applicantOosId,mode=IN,jdbcType=NUMERIC},
-                #{approverOosId,mode=IN,jdbcType=NUMERIC},
-                #{workItemId,mode=IN,jdbcType=NUMERIC},
-                #{actionTag,mode=IN,jdbcType=VARCHAR},
-                #{retVar,mode=OUT,jdbcType=VARCHAR}
-            )
-        }
+{
+call pck_wkf.nextProcess(
+#{applicantOosId,mode=IN,jdbcType=NUMERIC},
+#{approverOosId,mode=IN,jdbcType=NUMERIC},
+#{workItemId,mode=IN,jdbcType=NUMERIC},
+#{actionTag,mode=IN,jdbcType=VARCHAR},
+#{retVar,mode=OUT,jdbcType=VARCHAR}
+)
+}
     </select>
 
 
     <select id="apply" parameterType="map" statementType="CALLABLE">
-        {
-            call apply(
-                #{p1,mode=IN,jdbcType=NUMERIC},
-                #{p2,mode=IN,jdbcType=NUMERIC}
-            )
-        }
+{
+call apply(
+#{p1,mode=IN,jdbcType=NUMERIC},
+#{p2,mode=IN,jdbcType=NUMERIC}
+)
+}
     </select>
     <select id="approve" parameterType="map" statementType="CALLABLE">
-        {
-            call approve(
-                #{p1,mode=IN,jdbcType=NUMERIC},
-                #{p2,mode=IN,jdbcType=NUMERIC}
-            )
-        }
+{
+call approve(
+#{p1,mode=IN,jdbcType=NUMERIC},
+#{p2,mode=IN,jdbcType=NUMERIC}
+)
+}
     </select>
     <select id="reject" parameterType="map" statementType="CALLABLE">
-        {
-            call reject(
-                #{p1,mode=IN,jdbcType=NUMERIC},
-                #{p2,mode=IN,jdbcType=NUMERIC}
-            )
-        }
+{
+call reject(
+#{p1,mode=IN,jdbcType=NUMERIC},
+#{p2,mode=IN,jdbcType=NUMERIC}
+)
+}
     </select>
 
 

@@ -10,4 +10,6 @@ public interface WorkFlowService {
     public void startProcess(Map map);
 
     public void nextProcess(Map map);
+
+    String cancelProcess(Long processInsId);
 }

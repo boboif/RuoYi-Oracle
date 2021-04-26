@@ -101,8 +101,8 @@ public class WfHolidayController extends BaseController {
         Map map = new HashMap<String,String>();
         map.put("applicantOosId", ShiroUtils.getOosId());
         map.put("formTableName","WF_HOLIDAY");
-        map.put("formTableCdn","'WF_HOLIDAY_ID="+ wfHoliday.getWfHolidayId()+"'");
-        map.put("processDefId","1");
+        map.put("formTableCdn","WF_HOLIDAY_ID="+ wfHoliday.getWfHolidayId());
+        map.put("processDefId",1);
         workFlowService.startProcess(map);
         return success();
     }
@@ -155,5 +155,16 @@ public class WfHolidayController extends BaseController {
     @ResponseBody
     public AjaxResult remove(String ids) {
         return toAjax(wfHolidayService.deleteWfHolidayByIds(ids));
+    }
+    /**
+     * 删除假期申请
+     */
+    @RequiresPermissions("ee:holiday:cancelApply")
+    @Log(title = "假期申请", businessType = BusinessType.UPDATE)
+    @PostMapping("/cancelApply/{wfHolidayId}")
+    @ResponseBody
+    public AjaxResult cancelApply(@PathVariable("wfHolidayId") Long wfHolidayId) {
+
+        return wfHolidayService.cancelApply(wfHolidayId);
     }
 }

@@ -26,4 +26,11 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     public void nextProcess(Map map) {
         workflowMapper.nextProcess(map);
     }
+
+    @Override
+    public String cancelProcess(Long processInsId) {
+        workflowMapper.delProcessIns(processInsId);
+        workflowMapper.delWorkItem(processInsId);
+        return null;
+    }
 }

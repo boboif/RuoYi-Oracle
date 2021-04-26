@@ -1,6 +1,8 @@
 package com.ruoyi.ee.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,6 +108,28 @@ public class WfHolidayServiceImpl implements IWfHolidayService
     {
         wfHolidayMapper.deleteWfHolidayItemByWfHolidayId(wfHolidayId);
         return wfHolidayMapper.deleteWfHolidayById(wfHolidayId);
+    }
+
+    /**
+     * 判断当前是否已审批通过
+     * 流程上撤销回来
+     * 修改状态
+     * @param wfHolidayId
+     * @return
+     */
+    @Override
+    public AjaxResult cancelApply(Long wfHolidayId) {
+        WfHoliday wfHoliday = wfHolidayMapper.selectWfHolidayById(wfHolidayId);
+        if(wfHoliday.getStatus()!=1){
+            return  AjaxResult.error("当前申请已不在申请中，无法驳回");
+        }
+
+
+
+        wfHoliday.setStatus(0L);
+        wfHolidayMapper.updateWfHoliday(wfHoliday);
+        return AjaxResult.success("申请撤回成功！");
+
     }
 
     /**

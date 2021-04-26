@@ -1,6 +1,8 @@
 package com.ruoyi.ee.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.ee.domain.WfHoliday;
 
 /**
@@ -58,4 +60,6 @@ public interface IWfHolidayService
      * @return 结果
      */
     public int deleteWfHolidayById(Long wfHolidayId);
+
+    public AjaxResult cancelApply(Long wfHolidayId);
 }
