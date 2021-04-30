@@ -145,7 +145,7 @@
                             actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.wfHolidayId + '\')"><i class="fa fa-edit"></i>继续</a> ');
                             actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.wfHolidayId + '\')"><i class="fa fa-remove"></i>删除</a>');
                         }else if(row.status==1){
-                            actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="undo(\'' + row.wfHolidayId + '\')"><i class="fa fa-undo"></i>撤回</a> ');
+                            actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="cancelApply(\'' + row.wfHolidayId + '\')"><i class="fa fa-undo"></i>撤回</a> ');
                             actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.wfHolidayId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
 
                         }else if(row.status==2) {
@@ -164,6 +164,12 @@
             };
             $.table.init(options);
         });
+
+        let cancelApply = function (id) {
+            $.modal.confirm("您确认要撤回申请吗？", function(id) {
+                $.operate.post(prefix + "/cancelApply", { "wfHolidayId": id });
+            })
+        };
     </script>
 </body>
 </html>

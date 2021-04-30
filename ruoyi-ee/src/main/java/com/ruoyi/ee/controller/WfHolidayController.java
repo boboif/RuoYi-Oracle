@@ -135,6 +135,13 @@ public class WfHolidayController extends BaseController {
         return prefix + "/edit";
     }
 
+    @GetMapping("/detail/{wfHolidayId}")
+    public String detail(@PathVariable("wfHolidayId") Long wfHolidayId, ModelMap mmap) {
+        WfHoliday wfHoliday = wfHolidayService.selectWfHolidayById(wfHolidayId);
+        mmap.put("wfHoliday", wfHoliday);
+        return prefix + "/detail";
+    }
+
     /**
      * 修改保存假期申请
      */
