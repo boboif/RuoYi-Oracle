@@ -20,14 +20,13 @@
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">总天数：</label>
-                <div class="col-sm-8">
-                    <input name="allDays" th:field="*{allDays}" class="form-control" type="text">
+                    <div class="form-control-static" th:field="${allDays}">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">总时数：</label>
-                <div class="col-sm-8">
-                    <input name="allHours" th:field="*{allHours}" class="form-control" type="text">
+
+                    <div class="form-control-static" th:field="*{allHours}" >
                 </div>
             </div>
             <div class="form-group">
@@ -41,7 +40,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">审批历史：</label>
                 <div class="col-sm-8">
-                    <textarea name="verifyDesc" class="form-control">[[*{verifyDesc}]]</textarea>
+                    <textarea name="verifyDesc" readonly class="form-control">[[*{verifyDesc}]]</textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -50,12 +49,9 @@
                     <textarea name="talk" class="form-control">[[*{talk}]]</textarea>
                 </div>
             </div>
-
             <h4 class="form-header h4">请假明细</h4>
             <div class="row">
                 <div class="col-sm-12">
-                    <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i></button>
-                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delColumn()"><i class="fa fa-minus"> 删除</i></button>
                     <div class="col-sm-12 select-table table-striped">
                         <table id="bootstrap-table"></table>
                     </div>
@@ -63,19 +59,7 @@
             </div>
         </form>
     </div>
-    <div class="row">
-        <div class="col-sm-offset-5 col-sm-10">
-            <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()">
-                <i class="fa fa-check"></i> 申 请
-            </button>
-            <button type="button" class="btn btn-sm btn-info" onclick="submitHandler()">
-                <i class="fa fa-save"></i> 存 稿
-            </button>&nbsp;
-            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()">
-                <i class="fa fa-reply-all"></i> 返 回
-            </button>
-        </div>
-    </div>
+
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js"/>
     <th:block th:include="include :: moment-js"/>
@@ -152,23 +136,7 @@
                         var html = $.common.sprintf("<input class='form-control' type='text' name='wfHolidayItemList[%s].fromDate' value='%s'>", index, value);
                         return html;
                     },
-                    events: window.operatEvents = {
-                        'change #fromDate': function (e, value, row, index) {
-                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-                            let fDate ='';
-                            if(row.holidayType==1){
-                                fDate = moment($(e.target).val()).format('YYYY-MM-DD')+' 9:00';
-                            }else{
-                                fDate = $(e.target).val();
-                            }
-                            row.fromDate = fDate;
-                            if(checkRow(row)==false){
-                                row.fromDate = '';
-                            }
-                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
-                            setHourSum(row);
-                        }
-                    }
+
 				},
                 {
                     field: 'toDate',
@@ -178,25 +146,6 @@
                         var html = $.common.sprintf("<input class='form-control' type='text' name='wfHolidayItemList[%s].toDate' value='%s'>", index, value);
                         return html;
                     },
-                    events: window.operatEvents = {
-                        'change #toDate': function (e, value, row, index) {
-                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-                            let tDate ='';
-                            if(row.holidayType==1){
-                                tDate = moment($(e.target).val()).format('YYYY-MM-DD')+' 18:00';
-                            }else{
-                                tDate = $(e.target).val();
-                            }
-                            row.toDate = tDate;
-                            if(checkRow(row)==false){
-                                row.toDate = '';
-                                //return;
-                            }
-                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
-
-                            setHourSum(row);
-                        }
-                    }
 				},
                 {
                     field: 'daySum',
@@ -229,128 +178,7 @@
             $.table.init(options);
         });
 
-        function addColumn() {
-            var count = $("#" + table.options.id).bootstrapTable('getData').length;
-            sub.editColumn();
-        	
-            $("#" + table.options.id).bootstrapTable('insertRow', {
-                index: count,
-                row: {
-                    index: $.table.serialNumber(count),
-                    fromDate: "",
-                    toDate: "",
-                    daySum: "",
-                    hourSum: "",
-                    remark: "",
-                    holidayType: ""
-        	    }
-            });
-        }
-        var distime = [0,1,2,3,4,5,6,7,8,19,20,21,22,23,0];
-        var dateOption={
-            format: "yyyy-mm-dd",
-            autoclose: true,
-            minuteStep: 30,
-            pickTime: true,
-            minView: 2,
-            language: 'zh-CN',
-            todayHighlight: true,
-            pickerPosition: 'top-right',
-            bootcssVer: 3, // 显示箭头
-            ignoreReadOnly: true,
-        };
-        var dateTimeOption={
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            minuteStep: 30,
-            pickTime: true,
-            language: 'zh-CN',
-            todayHighlight: true,
-            pickerPosition: 'top-right',
-            bootcssVer: 3, // 显示箭头
-            ignoreReadOnly: true,
-            showMeridian: true,
-            // maxView: 4,
-            // viewSelect: 'day',
-            hoursDisabled:distime
-        };
-        $("#bootstrap-table").on("post-body.bs.table", function (e, rows) {
-            let allDays=0;
-            let allHours=0;
-            rows.forEach(function (row,i) {
 
-                allDays =  Number(allDays) + Number(row.daySum);
-                allHours =  Number(allHours) + Number(row.hourSum);
-                console.log('forEach==='+row.holidayType);
-                if(row.holidayType == 1){
-                    $("input[name='wfHolidayItemList["+i+"].fromDate']").datetimepicker(dateOption);
-                    $("input[name='wfHolidayItemList["+i+"].toDate']").datetimepicker(dateOption);
-                }else{
-                    $("input[name='wfHolidayItemList["+i+"].fromDate']").datetimepicker(dateTimeOption).on('change',function (e){
-                        e.preventDefault();
-                        e.stopPropagation();
-                        let endTime = $(e.target).val();
-
-                        $("input[name='wfHolidayItemList["+i+"].toDate']").datetimepicker('setStartDate', endTime);
-                    });
-                    $("input[name='wfHolidayItemList["+i+"].toDate']").datetimepicker(dateTimeOption).on('changeDate',function (e){
-                        e.preventDefault();
-                        e.stopPropagation();
-                        let endTime = $(e.target).val();
-                        $("input[name='wfHolidayItemList["+i+"].fromDate']").datetimepicker('setEndDate', endTime);
-                    });
-                }
-            });
-
-            $("input[name='allDays']").val(allDays);
-            $("input[name='allHours']").val(allHours);
-
-        });
-
-
-        function checkRow(row){
-            if ($.common.isEmpty(row.fromDate)) {
-                return;
-            }
-            if ($.common.isEmpty(row.toDate)) {
-                return;
-            }
-            if(row.holidayType == 3){
-                if(moment(row.fromDate).format('yyyyMMdd')!=moment(row.toDate).format('yyyyMMdd')){
-                    $.modal.msgError('小时假，必须是同一天！')
-                    return false;
-                }
-            }
-
-        }
-        function setHourSum(row) {
-            if ($.common.isEmpty(row.fromDate)) {
-                return;
-            }
-            if ($.common.isEmpty(row.toDate)) {
-                return;
-            }
-            let fd = moment(row.fromDate);
-            let td = moment(row.toDate);
-            let diffDay,diffHour;
-
-            if(row.holidayType == 1){
-                diffDay = (td.diff(fd, 'days')==0? 1: td.diff(fd, 'days'));
-                diffHour = diffDay * 8;
-            }
-            if(row.holidayType == 3){
-                diffHour = td.diff(fd, 'hours', true);
-                diffDay = diffHour / 8;
-            }
-            if (diffHour < 0) {
-                $.modal.msgError('截止日期必须晚于开始日期！')
-                return;
-            }
-            row.daySum = diffDay;
-            row.hourSum = diffHour;
-            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
-
-        }
     </script>
 </body>
 </html>

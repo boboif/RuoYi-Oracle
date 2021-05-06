@@ -168,7 +168,7 @@ public class WfHolidayController extends BaseController {
      */
     @RequiresPermissions("ee:holiday:cancelApply")
     @Log(title = "假期申请", businessType = BusinessType.UPDATE)
-    @PostMapping("/cancelApply/{wfHolidayId}")
+    @GetMapping("/cancelApply/{wfHolidayId}")
     @ResponseBody
     public AjaxResult cancelApply(@PathVariable("wfHolidayId") Long wfHolidayId) {
 
