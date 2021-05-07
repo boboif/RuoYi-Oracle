@@ -13,26 +13,26 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label is-required">类型：</label>
                 <div class="col-sm-8">
-                    <select name="hritemsId" class="form-control m-b" th:with="type=${@dict.getType('ee_holiday')}" required>
+                    <select name="hritemsId" class="form-control m-b" disabled th:with="type=${@dict.getType('ee_holiday')}" required>
                         <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{hritemsId}"></option>
                     </select>
                 </div>
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">总天数：</label>
-                    <div class="form-control-static" th:field="${allDays}">
+                    <div class="form-control-static" th:text="*{allDays}">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">总时数：</label>
 
-                    <div class="form-control-static" th:field="*{allHours}" >
+                    <div class="form-control-static" th:text="*{allHours}" >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">状态：</label>
                 <div class="col-sm-8">
-                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('ee_apply_status')}">
+                    <select name="status" class="form-control m-b" disabled th:with="type=${@dict.getType('ee_apply_status')}">
                         <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
                     </select>
                 </div>
@@ -46,7 +46,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">说明：</label>
                 <div class="col-sm-8">
-                    <textarea name="talk" class="form-control">[[*{talk}]]</textarea>
+                    <textarea name="talk" th:readonly="true" class="form-control">[[*{talk}]]</textarea>
                 </div>
             </div>
             <h4 class="form-header h4">请假明细</h4>
@@ -107,72 +107,46 @@
                     title: '假期类型',
                     formatter: function (value, row, index) {
                         // var html = $.common.sprintf("<input class='form-control' type='text' readonly name='wfHolidayItemList[%s].holidayType' value='%s'>", index, value);
-                        var html ="<div>\n" +
-                            "<select class='form-control' id='holidayType' name='wfHolidayItemList["+index+"].holidayType'>\n" +
-                            "    <option value='1' "+ (value ==='1'?'selected':'') + ">全天假</option>\n" +
-                            "    <option value='3' "+ (value ==='3'?'selected':'') + ">小时假</option>\n" +
-                            "</select>\n" +
-                            "</div>"
+                        let name = '';
+                        if(value ==='1') name='全天假';
+                        if(value ==='3') name='小时假';
+                        var html ="<div>" + name+ "</div>"
                         return html;
-                    },
-                    events: window.operatEvents = {
-                        'change #holidayType': function (e, value, row, index) {
-                            row.holidayType = $(e.target).val();
-                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-                            row.fromDate='';
-                            row.toDate='';
-                            row.daySum='';
-                            row.hourSum='';
-                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row})
-
-                        }
                     }
                 },
                 {
                     field: 'fromDate',
                     align: 'center',
                     title: '开始时间',
-                    formatter: function(value, row, index) {
+                  /*  formatter: function(value, row, index) {
                         var html = $.common.sprintf("<input class='form-control' type='text' name='wfHolidayItemList[%s].fromDate' value='%s'>", index, value);
                         return html;
-                    },
+                    },*/
 
 				},
                 {
                     field: 'toDate',
                     align: 'center',
                     title: '截止时间',
-                    formatter: function(value, row, index) {
+                 /*   formatter: function(value, row, index) {
                         var html = $.common.sprintf("<input class='form-control' type='text' name='wfHolidayItemList[%s].toDate' value='%s'>", index, value);
                         return html;
-                    },
+                    },*/
 				},
                 {
                     field: 'daySum',
                     align: 'center',
                     title: '天数小计',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<div> %s</div>", value);
-                        return html;
-                    }
 				},
                 {
                     field: 'hourSum',
                     align: 'center',
                     title: '时数小计',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<div> %s</div>", value);
-                        return html;
-                    }
 				},
                 {
                     field: 'remark',
                     align: 'center',
                     title: '备注',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='wfHolidayItemList[%s].remark' value='%s'>", index, value);
-                        return html;
-                    }
 				}]
             };
             $.table.init(options);
