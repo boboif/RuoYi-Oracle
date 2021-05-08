@@ -166,8 +166,8 @@
         });
 
         let cancelApply = function (id) {
-            $.modal.confirm("您确认要撤回申请吗？", function(id) {
-                $.operate.post(prefix + "/cancelApply", { "wfHolidayId": id });
+            $.modal.confirm("您确认要撤回申请吗？", function() {
+                $.operate.get(prefix + "/cancelApply/"+ id );
             })
         };
     </script>

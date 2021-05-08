@@ -124,8 +124,6 @@ public class WfHolidayServiceImpl implements IWfHolidayService
             return  AjaxResult.error("当前申请已不在申请中，无法驳回");
         }
 
-
-
         wfHoliday.setStatus(0L);
         wfHolidayMapper.updateWfHoliday(wfHoliday);
         return AjaxResult.success("申请撤回成功！");

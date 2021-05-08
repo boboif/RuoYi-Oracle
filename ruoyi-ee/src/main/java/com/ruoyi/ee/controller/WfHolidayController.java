@@ -166,7 +166,7 @@ public class WfHolidayController extends BaseController {
     /**
      * 删除假期申请
      */
-    @RequiresPermissions("ee:holiday:cancelApply")
+   // @RequiresPermissions("ee:holiday:cancelApply")
     @Log(title = "假期申请", businessType = BusinessType.UPDATE)
     @GetMapping("/cancelApply/{wfHolidayId}")
     @ResponseBody
