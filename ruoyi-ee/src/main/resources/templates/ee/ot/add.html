@@ -11,7 +11,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">加班类型：</label>
             <div class="col-sm-8">
-                <select name="hritemsId" class="form-control m-b" th:with="type=${@dict.getType('ee_ot_type')}">
+                <select id="hritemsId" name="hritemsId" class="form-control m-b" th:with="type=${@dict.getType('ee_ot_type')}">
                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                 </select>
             </div>
@@ -191,7 +191,9 @@
                     align: 'center',
                     title: '时数小计',
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' disabled name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
+                        var html ='' ;
+                       // alert($("#hritemsId").val());
+                        html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
                         return html;
                     }
                 },
@@ -233,7 +235,7 @@
                 $.modal.alertWarning('请添加您的加班明细信息');
                 return;
             }
-            $.operate.save(prefix + "/apply", $('#form-holiday-add').serialize());
+            $.operate.save(prefix + "/apply", $('#form-ot-add').serialize());
         }
     }
 
@@ -242,7 +244,7 @@
             if (checkList() == false) {
                 return;
             }
-            $.operate.save(prefix + "/save", $('#form-holiday-add').serialize());
+            $.operate.save(prefix + "/save", $('#form-ot-add').serialize());
         }
     }
 
@@ -288,8 +290,16 @@
                 e.preventDefault();
                 e.stopPropagation();
                 let endTime = $(e.target).val();
+               // endTime = moment(endTime).format("yyyy-MM-DD");
+                let defaultDate =  moment(endTime).add(8,'h');
+                 console.log("===="+endTime);
 
-                $("input[name='cwExtraWorkitemList[" + i + "].toDate']").datetimepicker('setStartDate', endTime);
+                let toDate = $("input[name='cwExtraWorkitemList[" + i + "].toDate']");
+                //toDate.datetimepicker({'setDate':defaultDate });
+                //toDate.datetimepicker({'setDate': endTime });
+                toDate.datetimepicker('setEndDate',defaultDate);
+                toDate.datetimepicker('setStartDate', endTime);
+                toDate.datetimepicker({'minView':2});
             });
             $("input[name='cwExtraWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption).on('changeDate', function (e) {
                 e.preventDefault();
@@ -313,9 +323,10 @@
         if ($.common.isEmpty(row.toDate)) {
             return;
         }
-        if (row.holidayType == 3) {
+
+        if ($("#hritemsId").val()== 2550) {
             if (moment(row.fromDate).format('yyyyMMdd') != moment(row.toDate).format('yyyyMMdd')) {
-                $.modal.msgError('小时假，必须是同一天！')
+                $.modal.msgError('日常加班，必须是同一天！')
                 return false;
             }
         }
@@ -331,12 +342,12 @@
         let fd = moment(row.fromDate);
         let td = moment(row.toDate);
         let diffDay, diffHour;
-
-        if (row.holidayType == 1) {
+       let otType = $("#hritemsId").val();
+        if (otType== 1) {
             diffDay = (td.diff(fd, 'days') == 0 ? 1 : td.diff(fd, 'days'));
             diffHour = diffDay * 8;
         }
-        if (row.holidayType == 3) {
+        if (otType == 3) {
             diffHour = td.diff(fd, 'hours', true);
             diffDay = diffHour / 8;
         }
@@ -350,6 +361,9 @@
 
     }
 
+    $("#hritemsId").on('change', function (e) {
+        $("#bootstrap-table").bootstrapTable("removeAll");
+    });
 </script>
 </body>
 </html>

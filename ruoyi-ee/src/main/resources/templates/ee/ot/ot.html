@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('加班管理列表')" />
+    <th:block th:include="include :: header('加班')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -84,7 +84,7 @@
                 removeUrl: prefix + "/remove",
                 detailUrl: prefix + "/detail/{id}",
                 exportUrl: prefix + "/export",
-                modalName: "加班管理",
+                modalName: "加班",
                 columns: [{
                     checkbox: true
                 },
