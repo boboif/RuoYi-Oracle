@@ -162,11 +162,7 @@
                         'change #toDate': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
                             let tDate = '';
-                            /*if (row.holidayType == 1) {
-                                tDate = moment($(e.target).val()).format('YYYY-MM-DD') + ' 18:00';
-                            } else {
-                                tDate = $(e.target).val();
-                            }*/
+
                             tDate = $(e.target).val();
                             row.toDate = tDate;
                             if (checkRow(row) == false) {
@@ -182,9 +178,10 @@
                     align: 'center',
                     title: '天数小计',
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' disabled name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
+                        var html = $.common.sprintf("<input class='form-control' type='text' id='daySum' disabled name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
                         return html;
-                    }
+                    },
+
                 },
                 {
                     field: 'hourSum',
@@ -192,9 +189,23 @@
                     title: '时数小计',
                     formatter: function (value, row, index) {
                         var html ='' ;
-                       // alert($("#hritemsId").val());
-                        html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
+                        alert($("#hritemsId").val());
+                        html = $.common.sprintf("<input class='form-control' type='text' id='hourSum' name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
                         return html;
+                    },
+                    events: window.operatEvents = {
+                        'change #hourSum': function (e, value, row, index) {
+                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
+                            let tDate = '';
+                            tDate = $(e.target).val();
+                            row.toDate = tDate;
+                            if (checkRow(row) == false) {
+                                row.toDate = '';
+                            }
+
+                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+                            //setHourSum(row);
+                        }
                     }
                 },
                 {
@@ -280,26 +291,33 @@
     $("#bootstrap-table").on("post-body.bs.table", function (e, rows) {
         let allDays = 0;
         let allHours = 0;
+        let hritemsId =$("#hritemsId").val();
         rows.forEach(function (row, i) {
 
             allDays = Number(allDays) + Number(row.daySum);
             allHours = Number(allHours) + Number(row.hourSum);
 
+            let fromDate = $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption);
+            if(hritemsId == 2550){ //日常加班
+                $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('hoursDisabled',[6,7,8,9,10,12,13,14,15,16,17]);
+            }
+            if(hritemsId ==2551){
+                $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [1,2,3,4,5]);
+            }
 
-            $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption).on('change', function (e) {
+
+            fromDate.on('change', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 let endTime = $(e.target).val();
-               // endTime = moment(endTime).format("yyyy-MM-DD");
-                let defaultDate =  moment(endTime).add(8,'h');
-                 console.log("===="+endTime);
+                let optEndDate =  moment(endTime).add(8,'h').format('YYYY-MM-DD HH:MM');
+                console.log("===="+endTime);
 
                 let toDate = $("input[name='cwExtraWorkitemList[" + i + "].toDate']");
-                //toDate.datetimepicker({'setDate':defaultDate });
-                //toDate.datetimepicker({'setDate': endTime });
-                toDate.datetimepicker('setEndDate',defaultDate);
+                toDate.datetimepicker('setEndDate',optEndDate);
                 toDate.datetimepicker('setStartDate', endTime);
-                toDate.datetimepicker({'minView':2});
+                fromDate.minView='hour';
+                //toDate.datetimepicker({'minView':2});
             });
             $("input[name='cwExtraWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption).on('changeDate', function (e) {
                 e.preventDefault();
@@ -307,26 +325,43 @@
                 let endTime = $(e.target).val();
                 $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setEndDate', endTime);
             });
-
         });
-
         $("input[name='allDays']").val(allDays);
         $("input[name='allHours']").val(allHours);
-
     });
 
 
     function checkRow(row) {
+        let otType = $("#hritemsId").val();
+        if(otType=='2551'){ //双休日加班
+            if ($.common.isEmpty(row.fromDate)) {
+                let d = moment(row.fromDate).format('d');
+                if(d==0 || d==6){
+                    $.modal.msgError('双休日加班，您选择的不是双休日期')
+                    return;
+                }
+            }
+            if ($.common.isEmpty(row.toDate)) {
+                let d = moment(row.toDate).format('d');
+                if(d==0 || d==6){
+                    $.modal.msgError('双休日加班，您选择的不是双休日期')
+                    return;
+                }
+            }
+        }
+
         if ($.common.isEmpty(row.fromDate)) {
             return;
         }
         if ($.common.isEmpty(row.toDate)) {
             return;
         }
-
-        if ($("#hritemsId").val()== 2550) {
-            if (moment(row.fromDate).format('yyyyMMdd') != moment(row.toDate).format('yyyyMMdd')) {
-                $.modal.msgError('日常加班，必须是同一天！')
+        if (otType == 2550) {//日常加班
+            let fd = moment(row.fromDate);
+            let td = moment(row.toDate);
+            diffHour = td.diff(fd, 'hours', true);
+            if (diffHour > 8) {
+                $.modal.msgError('日常加班，时长不可超过8小时')
                 return false;
             }
         }
@@ -339,15 +374,16 @@
         if ($.common.isEmpty(row.toDate)) {
             return;
         }
+
         let fd = moment(row.fromDate);
         let td = moment(row.toDate);
         let diffDay, diffHour;
-       let otType = $("#hritemsId").val();
-        if (otType== 1) {
+        let otType = $("#hritemsId").val();
+        if (otType== 2551 || otType== 2552) { // 周末加班
             diffDay = (td.diff(fd, 'days') == 0 ? 1 : td.diff(fd, 'days'));
             diffHour = diffDay * 8;
         }
-        if (otType == 3) {
+        if (otType == 2550) {  // 日常加班
             diffHour = td.diff(fd, 'hours', true);
             diffDay = diffHour / 8;
         }
@@ -360,6 +396,7 @@
         $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
 
     }
+
 
     $("#hritemsId").on('change', function (e) {
         $("#bootstrap-table").bootstrapTable("removeAll");
