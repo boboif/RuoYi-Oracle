@@ -1,6 +1,9 @@
 package com.ruoyi.ee.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.ee.domain.CwExtraWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -91,7 +94,18 @@ public class CwOutWorkServiceImpl implements ICwOutWorkService
         cwOutWorkMapper.deleteCwOutWorkitemByCwOutWorkIds(Convert.toStrArray(ids));
         return cwOutWorkMapper.deleteCwOutWorkByIds(Convert.toStrArray(ids));
     }
+    @Override
+    public AjaxResult cancelApply(Long cwOutWorkId) {
+        CwOutWork cwOutWork = cwOutWorkMapper.selectCwOutWorkById(cwOutWorkId);
+        if(cwOutWork.getStatus()!=1){
+            return  AjaxResult.error("当前申请已不在申请中，无法驳回");
+        }
 
+        cwOutWork.setStatus(0L);
+        cwOutWorkMapper.updateCwOutWork(cwOutWork);
+        return AjaxResult.success("申请撤回成功！");
+
+    }
     /**
      * 删除出差信息
      * 

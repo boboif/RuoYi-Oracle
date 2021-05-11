@@ -1,6 +1,8 @@
 package com.ruoyi.ee.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.ee.domain.CwExtraWork;
 
 /**
@@ -51,6 +53,8 @@ public interface ICwExtraWorkService
      */
     public int deleteCwExtraWorkByIds(String ids);
 
+
+    public AjaxResult cancelApply(Long wfHolidayId);
     /**
      * 删除加班管理信息
      * 

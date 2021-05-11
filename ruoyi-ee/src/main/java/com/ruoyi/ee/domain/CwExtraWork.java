@@ -26,11 +26,11 @@ public class CwExtraWork extends BaseEntity
 
     /** 总天数 */
     @Excel(name = "总天数")
-    private Long allDays;
+    private Double allDays;
 
     /** 总时数 */
     @Excel(name = "总时数")
-    private Long allHours;
+    private Double allHours;
 
     /** 申请状态 */
     @Excel(name = "申请状态")
@@ -84,21 +84,21 @@ public class CwExtraWork extends BaseEntity
     {
         return onoffStationId;
     }
-    public void setAllDays(Long allDays) 
+    public void setAllDays(Double allDays)
     {
         this.allDays = allDays;
     }
 
-    public Long getAllDays() 
+    public Double getAllDays()
     {
         return allDays;
     }
-    public void setAllHours(Long allHours) 
+    public void setAllHours(Double allHours)
     {
         this.allHours = allHours;
     }
 
-    public Long getAllHours() 
+    public Double getAllHours()
     {
         return allHours;
     }

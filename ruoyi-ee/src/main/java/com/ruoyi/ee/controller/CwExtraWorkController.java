@@ -104,7 +104,7 @@ public class CwExtraWorkController extends BaseController
         map.put("applicantOosId", ShiroUtils.getOosId());
         map.put("formTableName","CW_EXTRA_WORK");
         map.put("formTableCdn","'CW_EXTRA_WORK_ID="+ cwExtraWork.getCwExtraWorkId()+"'");
-        map.put("","");
+       // map.put("processDefId",1);
         workFlowService.startProcess(map);
         return success();
     }

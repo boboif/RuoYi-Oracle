@@ -1,6 +1,8 @@
 package com.ruoyi.ee.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.ee.domain.CwOutWork;
 
 /**
@@ -50,7 +52,7 @@ public interface ICwOutWorkService
      * @return 结果
      */
     public int deleteCwOutWorkByIds(String ids);
-
+    public AjaxResult cancelApply(Long cwOutWorkId);
     /**
      * 删除出差信息
      * 

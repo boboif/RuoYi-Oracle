@@ -40,12 +40,6 @@
          </div>-->
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">审核历史：</label>
-            <div class="col-sm-8">
-                <input name="verifyDesc" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-3 control-label">申请说明：</label>
             <div class="col-sm-7">
                 <textarea name="talk" class="form-control" ></textarea>
@@ -178,10 +172,10 @@
                     align: 'center',
                     title: '天数小计',
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' id='daySum' disabled name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
-                        return html;
+                        var colHidden = $.common.sprintf("<input type='hidden' name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
+                        var html = $.common.sprintf("<div> %s</div>", value);
+                        return colHidden + html;
                     },
-
                 },
                 {
                     field: 'hourSum',
@@ -189,22 +183,25 @@
                     title: '时数小计',
                     formatter: function (value, row, index) {
                         var html ='' ;
-                        alert($("#hritemsId").val());
                         html = $.common.sprintf("<input class='form-control' type='text' id='hourSum' name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
                         return html;
                     },
                     events: window.operatEvents = {
                         'change #hourSum': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-                            let tDate = '';
-                            tDate = $(e.target).val();
-                            row.toDate = tDate;
+                            let val = $(e.target).val();
+                            let daySum =val/8;
+
                             if (checkRow(row) == false) {
-                                row.toDate = '';
+                                $.modal.alertWarning('请先选择开始和截止日期');
+                                return;
                             }
 
+                            console.log(row)
+                            row.daySum = daySum;
+                            row.hourSum = val;
                             $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
-                            //setHourSum(row);
+
                         }
                     }
                 },
@@ -265,7 +262,7 @@
         data.forEach(function (row, i) {
             if ($.common.isEmpty(row.fromDate) || $.common.isEmpty(row.toDate)) {
                 ret = false;
-                $.modal.msgError('请完整填写开始和截止日期');
+                $.modal.alertWarning('请完整填写开始和截止日期');
                 return;
             }
         });
@@ -286,7 +283,7 @@
         showMeridian: true,
         // maxView: 4,
         // viewSelect: 'day',
-        hoursDisabled: distime
+        //hoursDisabled: distime
     };
     $("#bootstrap-table").on("post-body.bs.table", function (e, rows) {
         let allDays = 0;
@@ -296,10 +293,12 @@
 
             allDays = Number(allDays) + Number(row.daySum);
             allHours = Number(allHours) + Number(row.hourSum);
-
+            if(hritemsId == 2550){ //日常加班
+                dateTimeOption.hoursDisabled=[6,7,8,9,10,12,13,14,15,16,17];
+            }
             let fromDate = $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption);
             if(hritemsId == 2550){ //日常加班
-                $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('hoursDisabled',[6,7,8,9,10,12,13,14,15,16,17]);
+                $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [0,6]);
             }
             if(hritemsId ==2551){
                 $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [1,2,3,4,5]);
@@ -338,24 +337,18 @@
                 let d = moment(row.fromDate).format('d');
                 if(d==0 || d==6){
                     $.modal.msgError('双休日加班，您选择的不是双休日期')
-                    return;
+                    return false;
                 }
             }
             if ($.common.isEmpty(row.toDate)) {
                 let d = moment(row.toDate).format('d');
                 if(d==0 || d==6){
                     $.modal.msgError('双休日加班，您选择的不是双休日期')
-                    return;
+                    return false;
                 }
             }
         }
 
-        if ($.common.isEmpty(row.fromDate)) {
-            return;
-        }
-        if ($.common.isEmpty(row.toDate)) {
-            return;
-        }
         if (otType == 2550) {//日常加班
             let fd = moment(row.fromDate);
             let td = moment(row.toDate);
@@ -365,6 +358,7 @@
                 return false;
             }
         }
+        return true;
     }
 
     function setHourSum(row) {

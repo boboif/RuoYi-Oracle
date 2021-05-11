@@ -1,6 +1,10 @@
 package com.ruoyi.ee.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.ee.domain.WfHoliday;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -74,6 +78,7 @@ public class CwExtraWorkServiceImpl implements ICwExtraWorkService
     public int updateCwExtraWork(CwExtraWork cwExtraWork)
     {
         cwExtraWorkMapper.deleteCwExtraWorkitemByCwExtraWorkId(cwExtraWork.getCwExtraWorkId());
+        cwExtraWork.setUpdateTime(DateUtils.getNowDate());
         insertCwExtraWorkitem(cwExtraWork);
         return cwExtraWorkMapper.updateCwExtraWork(cwExtraWork);
     }
@@ -104,6 +109,20 @@ public class CwExtraWorkServiceImpl implements ICwExtraWorkService
         cwExtraWorkMapper.deleteCwExtraWorkitemByCwExtraWorkId(cwExtraWorkId);
         return cwExtraWorkMapper.deleteCwExtraWorkById(cwExtraWorkId);
     }
+
+    @Override
+    public AjaxResult cancelApply(Long cwExtraWorkId) {
+        CwExtraWork cwExtraWork = cwExtraWorkMapper.selectCwExtraWorkById(cwExtraWorkId);
+        if(cwExtraWork.getStatus()!=1){
+            return  AjaxResult.error("当前申请已不在申请中，无法驳回");
+        }
+
+        cwExtraWork.setStatus(0L);
+        cwExtraWorkMapper.updateCwExtraWork(cwExtraWork);
+        return AjaxResult.success("申请撤回成功！");
+
+    }
+
 
     /**
      * 新增考勤 加班管理信息
