@@ -71,11 +71,6 @@
                     checkbox: true
                 },
                 {
-                    field: 'cwOutWorkId',
-                    title: '预支金额',
-                    visible: false
-                },
-                {
                     field: 'allDays',
                     title: '总天数'
                 },
@@ -99,17 +94,31 @@
                     field: 'talk',
                     title: '说明'
                 },
-                {
+              /*  {
                     field: 'advanceMoney',
                     title: '预支金额'
-                },
+                },*/
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.cwOutWorkId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.cwOutWorkId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        if(row.status==0){ // 0未申请1申请中 2 通过 3驳回
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.cwOutWorkId + '\')"><i class="fa fa-edit"></i>继续</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.cwOutWorkId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }else if(row.status==1){
+                            actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="cancelApply(\'' + row.cwOutWorkId + '\')"><i class="fa fa-undo"></i>撤回</a> ');
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.cwOutWorkId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+
+                        }else if(row.status==2) {
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.cwOutWorkId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+                        }else if(row.status==3) {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.addTab(\'' + row.cwOutWorkId + '\')"><i class="fa fa-edit"></i>继续</a> ');
+                            actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.cwOutWorkId + '\')"><i class="fa fa-wpforms"></i>详细</a> ');
+                        }else{
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.cwOutWorkId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+
                         return actions.join('');
                     }
                 }]

@@ -129,11 +129,6 @@
                         'change #fromDate': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
                             let fDate = '';
-                            /*if (row.holidayType == 1) {
-                                fDate = moment($(e.target).val()).format('YYYY-MM-DD') + ' 9:00';
-                            } else {
-                                fDate = $(e.target).val();
-                            }*/
                             fDate = $(e.target).val();
                             row.fromDate = fDate;
                             if (checkRow(row) == false) {

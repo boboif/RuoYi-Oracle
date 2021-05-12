@@ -20,33 +20,9 @@
                 <input name="allHours" class="form-control" readonly type="text">
             </div>
         </div>
-        <!--  <div class="form-group">
-              <label class="col-sm-3 control-label">申请状态：</label>
-              <div class="col-sm-8">
-                  <div class="radio-box">
-                      <input type="radio" name="status" value="">
-                      <label th:for="status" th:text="未知"></label>
-                  </div>
-                  <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-              </div>
-          </div>-->
-        <!--   <div class="form-group">
-               <label class="col-sm-3 control-label">创建时间：</label>
-               <div class="col-sm-8">
-                   <div class="input-group date">
-                       <input name="createDate" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                   </div>
-               </div>
-           </div>-->
+
         <div class="form-group">
-            <label class="col-sm-3 control-label">审核历史：</label>
-            <div class="col-sm-8">
-                <input name="verifyDesc" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">申请说明：</label>
+            <label class="col-sm-3 control-label">出差事由：</label>
             <div class="col-sm-8">
                     <textarea name="talk" class="form-control" ></textarea>
             </div>
@@ -136,15 +112,8 @@
                     },
                     events: window.operatEvents = {
                         'change #fromDate': function (e, value, row, index) {
-
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-
                             let fDate = '';
-                            /*if (row.holidayType == 1) {
-                                fDate = moment($(e.target).val()).format('YYYY-MM-DD') + ' 9:00';
-                            } else {
-                                fDate = $(e.target).val();
-                            }*/
                             fDate = $(e.target).val();
                             row.fromDate = fDate;
                             if (checkRow(row) == false) {
@@ -167,11 +136,6 @@
                         'change #toDate': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
                             let tDate = '';
-                            /*if (row.holidayType == 1) {
-                                tDate = moment($(e.target).val()).format('YYYY-MM-DD') + ' 18:00';
-                            } else {
-                                tDate = $(e.target).val();
-                            }*/
                             tDate = $(e.target).val();
                             row.toDate = tDate;
                             if (checkRow(row) == false) {
@@ -187,8 +151,23 @@
                     align: 'center',
                     title: '天数小计',
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].daySum' value='%s'>", index, value);
+                        var html = $.common.sprintf("<input class='form-control' type='text' id='daySum' name='cwOutWorkitemList[%s].daySum' value='%s'>", index, value);
                         return html;
+                    },
+                    events: window.operatEvents = {
+                        'change #daySum': function (e, value, row, index) {
+                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
+                            let val = $(e.target).val();
+                            let hourSum =val*8;
+                            if (checkRow(row) == false) {
+                                $.modal.alertWarning('请先选择开始和截止日期');
+                                return;
+                            }
+                            row.daySum = val;
+                            row.hourSum = hourSum;
+                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+
+                        }
                     }
                 },
                 {
@@ -196,8 +175,9 @@
                     align: 'center',
                     title: '时数小计',
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwOutWorkitemList[%s].hourSum' value='%s'>", index, value);
-                        return html;
+                        var colHidden = $.common.sprintf("<input type='hidden' name='cwOutWorkitemList[%s].daySum' value='%s'>", index, value);
+                        var html = $.common.sprintf("<div> %s</div>", value);
+                        return colHidden + html;
                     }
                 },
                 {
@@ -234,10 +214,10 @@
     function submitHandler() {
         if ($.validate.form()) {
             if ($("input[name='allHours']").val() <= 0) {
-                $.modal.alertWarning('请添加您的加班明细信息');
+                $.modal.alertWarning('请添加您的出差明细信息');
                 return;
             }
-            $.operate.save(prefix + "/apply", $('#form-holiday-add').serialize());
+            $.operate.save(prefix + "/apply", $('#form-trip-add').serialize());
         }
     }
 
@@ -246,7 +226,7 @@
             if (checkList() == false) {
                 return;
             }
-            $.operate.save(prefix + "/save", $('#form-holiday-add').serialize());
+            $.operate.save(prefix + "/save", $('#form-trip-add').serialize());
         }
     }
 
@@ -267,7 +247,7 @@
     var dateTimeOption = {
         format: "yyyy-mm-dd hh:ii",
         autoClose: true,
-        minuteStep: 30,
+        minuteStep: 60,
         pickTime: true,
         language: 'zh-CN',
         todayHighlight: true,
@@ -292,7 +272,6 @@
                 e.preventDefault();
                 e.stopPropagation();
                 let endTime = $(e.target).val();
-
                 $("input[name='cwOutWorkitemList[" + i + "].toDate']").datetimepicker('setStartDate', endTime);
             });
             $("input[name='cwOutWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption).on('changeDate', function (e) {
@@ -317,11 +296,9 @@
         if ($.common.isEmpty(row.toDate)) {
             return;
         }
-        if (row.holidayType == 3) {
-            if (moment(row.fromDate).format('yyyyMMdd') != moment(row.toDate).format('yyyyMMdd')) {
-                $.modal.msgError('小时假，必须是同一天！')
-                return false;
-            }
+        if (moment(row.fromDate).format('yyyyMMdd') >= moment(row.toDate).format('yyyyMMdd')) {
+            $.modal.msgError('出差的开始时间和截止时间不符合规范')
+            return false;
         }
     }
 
@@ -336,14 +313,8 @@
         let td = moment(row.toDate);
         let diffDay, diffHour;
 
-        if (row.holidayType == 1) {
-            diffDay = (td.diff(fd, 'days') == 0 ? 1 : td.diff(fd, 'days'));
-            diffHour = diffDay * 8;
-        }
-        if (row.holidayType == 3) {
-            diffHour = td.diff(fd, 'hours', true);
-            diffDay = diffHour / 8;
-        }
+        diffDay = (td.diff(fd, 'days') == 0 ? 1 : td.diff(fd, 'days'));
+        diffHour = diffDay * 8;
         if (diffHour < 0) {
             $.modal.msgError('截止日期必须晚于开始日期！')
             return;

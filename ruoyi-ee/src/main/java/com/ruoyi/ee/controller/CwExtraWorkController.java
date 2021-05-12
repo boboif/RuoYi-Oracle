@@ -119,7 +119,7 @@ public class CwExtraWorkController extends BaseController
     public AjaxResult save(CwExtraWork cwExtraWork) {
         cwExtraWork.setStatus(0L);
         AjaxResult ajaxResult =null;
-        if (StringUtils.isEmpty(cwExtraWork.getCwExtraWorkId())) {
+        if (!StringUtils.isEmpty(cwExtraWork.getCwExtraWorkId())) {
             ajaxResult=toAjax(cwExtraWorkService.updateCwExtraWork(cwExtraWork));
         }else{
             ajaxResult =toAjax(cwExtraWorkService.insertCwExtraWork(cwExtraWork));

@@ -7,58 +7,9 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-ot-edit" th:object="${cwExtraWork}">
-            <h4 class="form-header h4">加班管理信息</h4>
+            <h4 class="form-header h4">加班申请</h4>
             <input name="cwExtraWorkId" th:field="*{cwExtraWorkId}" type="hidden">
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">总天数：</label>
-                <div class="col-sm-8">
-                    <input name="allDays" th:field="*{allDays}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">总时数：</label>
-                <div class="col-sm-8">
-                    <input name="allHours" th:field="*{allHours}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">申请状态：</label>
-                <div class="col-sm-8">
-                    <div class="radio-box">
-                        <input type="radio" name="status" value="">
-                        <label th:for="status" th:text="未知"></label>
-                    </div>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">创建时间：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <input name="createDate" th:value="${#dates.format(cwExtraWork.createDate, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">创建时间：</label>
-                <div class="col-sm-8">
-                    <input name="createId" th:field="*{createId}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">审核历史：</label>
-                <div class="col-sm-8">
-                    <input name="verifyDesc" th:field="*{verifyDesc}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">说明：</label>
-                <div class="col-sm-8">
-                    <input name="talk" th:field="*{talk}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
+            <div class="form-group">
                 <label class="col-sm-3 control-label">加班类型：</label>
                 <div class="col-sm-8">
                     <select name="hritemsId" class="form-control m-b" th:with="type=${@dict.getType('ee_ot_type')}">
@@ -66,7 +17,27 @@
                     </select>
                 </div>
             </div>
-            <h4 class="form-header h4">考勤 加班管理信息</h4>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总天数：</label>
+                <div class="col-sm-8">
+                    <input name="allDays" th:field="*{allDays}" readonly class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">总时数：</label>
+                <div class="col-sm-8">
+                    <input name="allHours" th:field="*{allHours}" readonly class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">加班说明：</label>
+                <div class="col-sm-8">
+                    <input name="talk" th:field="*{talk}" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h4 class="form-header h4">加班明细</h4>
             <div class="row">
                 <div class="col-sm-12">
                     <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i></button>
@@ -80,6 +51,8 @@
     </div>
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: moment-js"/>
+
     <script th:inline="javascript">
         var prefix = ctx + "ee/ot";
         $("#form-ot-edit").validate({
@@ -119,79 +92,98 @@
                     	return columnIndex + $.table.serialNumber(index);
                     }
                 },
+                    {
+                        field: 'fromDate',
+                        align: 'center',
+                        title: '开始时间',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].fromDate' value='%s'>", index, value);
+                            return html;
+                        },
+                        events: window.operatEvents = {
+                            'change #fromDate': function (e, value, row, index) {
+                                row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
+                                let fDate = '';
+                                fDate = $(e.target).val();
+                                row.fromDate = fDate;
+                                if (checkRow(row) == false) {
+                                    row.fromDate = '';
+                                }
+                                $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+                                setHourSum(row);
+                            }
+                        }
+                    },
                 {
                     field: 'toDate',
                     align: 'center',
-                    title: '加班类型',
+                    title: '截止时间',
                     formatter: function(value, row, index) {
                         var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].toDate' value='%s'>", index, value);
                         return html;
+                    },
+                    events: window.operatEvents = {
+                        'change #toDate': function (e, value, row, index) {
+                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
+                            let tDate = '';
+
+                            tDate = $(e.target).val();
+                            row.toDate = tDate;
+                            if (checkRow(row) == false) {
+                                row.toDate = '';
+                            }
+                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+                            setHourSum(row);
+                        }
                     }
 				},
-                {
-                    field: 'fromDate',
-                    align: 'center',
-                    title: '加班类型',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].fromDate' value='%s'>", index, value);
-                        return html;
-                    }
-				},
+
                 {
                     field: 'daySum',
                     align: 'center',
-                    title: '加班类型',
+                    title: '天数小计',
                     formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
-                        return html;
+                        var colHidden = $.common.sprintf("<input type='hidden' name='cwExtraWorkitemList[%s].daySum' value='%s'>", index, value);
+                        var html = $.common.sprintf("<div> %s</div>", value);
+                        return colHidden + html;
                     }
 				},
                 {
                     field: 'hourSum',
                     align: 'center',
-                    title: '加班类型',
+                    title: '时数小计',
                     formatter: function(value, row, index) {
                         var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].hourSum' value='%s'>", index, value);
                         return html;
+                    },
+                    events: window.operatEvents = {
+                        'change #hourSum': function (e, value, row, index) {
+                            row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
+                            let val = $(e.target).val();
+                            let daySum =val/8;
+
+                            if (checkRow(row) == false) {
+                                $.modal.alertWarning('请先选择开始和截止日期');
+                                return;
+                            }
+
+                            console.log(row)
+                            row.daySum = daySum;
+                            row.hourSum = val;
+                            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+
+                        }
                     }
 				},
                 {
                     field: 'remark',
                     align: 'center',
-                    title: '加班类型',
+                    title: '备注',
                     formatter: function(value, row, index) {
                         var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].remark' value='%s'>", index, value);
                         return html;
                     }
-				},
-                {
-                    field: 'benefitDouble',
-                    align: 'center',
-                    title: '加班工资的倍数',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].benefitDouble' value='%s'>", index, value);
-                        return html;
-                    }
-				},
-                {
-                    field: 'hritemsId',
-                    align: 'center',
-                    title: '加班工资的倍数',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].hritemsId' value='%s'>", index, value);
-                        return html;
-                    }
-				},
-                {
-                    field: 'payWay',
-                    align: 'center',
-                    title: '补偿方式 0不动声色 1补薪 2调休',
-                    formatter: function(value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='cwExtraWorkitemList[%s].payWay' value='%s'>", index, value);
-                        return html;
-                    }
-				
-                }]
+				}]
             };
             $.table.init(options);
         });
@@ -215,6 +207,166 @@
         	    }
             });
         }
+
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                if ($("input[name='allHours']").val() <= 0) {
+                    $.modal.alertWarning('请添加您的加班明细信息');
+                    return;
+                }
+                $.operate.save(prefix + "/apply", $('#form-ot-add').serialize());
+            }
+        }
+
+        function saveHandler() {
+            if ($.validate.form()) {
+                if (checkList() == false) {
+                    return;
+                }
+                $.operate.save(prefix + "/save", $('#form-ot-add').serialize());
+            }
+        }
+
+        function checkList() {
+            let data = $("#" + table.options.id).bootstrapTable('getData', {useCurrentPage: true, includeHiddenRows: true});
+            let ret = true;
+            data.forEach(function (row, i) {
+                if ($.common.isEmpty(row.fromDate) || $.common.isEmpty(row.toDate)) {
+                    ret = false;
+                    $.modal.alertWarning('请完整填写开始和截止日期');
+                    return;
+                }
+            });
+            return ret;
+        }
+
+        var distime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23, 0];
+        var dateTimeOption = {
+            format: "yyyy-mm-dd hh:ii",
+            autoClose: true,
+            minuteStep: 30,
+            pickTime: true,
+            language: 'zh-CN',
+            todayHighlight: true,
+            pickerPosition: 'top-right',
+            bootcssVer: 3, // 显示箭头
+            ignoreReadOnly: true,
+            showMeridian: true,
+            // maxView: 4,
+            // viewSelect: 'day',
+            //hoursDisabled: distime
+        };
+        $("#bootstrap-table").on("post-body.bs.table", function (e, rows) {
+            let allDays = 0;
+            let allHours = 0;
+            let hritemsId =$("#hritemsId").val();
+            rows.forEach(function (row, i) {
+
+                allDays = Number(allDays) + Number(row.daySum);
+                allHours = Number(allHours) + Number(row.hourSum);
+                if(hritemsId == 2550){ //日常加班
+                    dateTimeOption.hoursDisabled=[6,7,8,9,10,12,13,14,15,16,17];
+                }
+                let fromDate = $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption);
+                if(hritemsId == 2550){ //日常加班
+                    $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [0,6]);
+                }
+                if(hritemsId ==2551){
+                    $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [1,2,3,4,5]);
+                }
+
+
+                fromDate.on('change', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let endTime = $(e.target).val();
+                    let optEndDate =  moment(endTime).add(8,'h').format('YYYY-MM-DD HH:MM');
+                    console.log("===="+endTime);
+
+                    let toDate = $("input[name='cwExtraWorkitemList[" + i + "].toDate']");
+                    toDate.datetimepicker('setEndDate',optEndDate);
+                    toDate.datetimepicker('setStartDate', endTime);
+                    fromDate.minView='hour';
+                    //toDate.datetimepicker({'minView':2});
+                });
+                $("input[name='cwExtraWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption).on('changeDate', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let endTime = $(e.target).val();
+                    $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setEndDate', endTime);
+                });
+            });
+            $("input[name='allDays']").val(allDays);
+            $("input[name='allHours']").val(allHours);
+        });
+
+
+        function checkRow(row) {
+            let otType = $("#hritemsId").val();
+            if(otType=='2551'){ //双休日加班
+                if ($.common.isEmpty(row.fromDate)) {
+                    let d = moment(row.fromDate).format('d');
+                    if(d==0 || d==6){
+                        $.modal.msgError('双休日加班，您选择的不是双休日期')
+                        return false;
+                    }
+                }
+                if ($.common.isEmpty(row.toDate)) {
+                    let d = moment(row.toDate).format('d');
+                    if(d==0 || d==6){
+                        $.modal.msgError('双休日加班，您选择的不是双休日期')
+                        return false;
+                    }
+                }
+            }
+
+            if (otType == 2550) {//日常加班
+                let fd = moment(row.fromDate);
+                let td = moment(row.toDate);
+                diffHour = td.diff(fd, 'hours', true);
+                if (diffHour > 8) {
+                    $.modal.msgError('日常加班，时长不可超过8小时')
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function setHourSum(row) {
+            if ($.common.isEmpty(row.fromDate)) {
+                return;
+            }
+            if ($.common.isEmpty(row.toDate)) {
+                return;
+            }
+
+            let fd = moment(row.fromDate);
+            let td = moment(row.toDate);
+            let diffDay, diffHour;
+            let otType = $("#hritemsId").val();
+            if (otType== 2551 || otType== 2552) { // 周末加班
+                diffDay = (td.diff(fd, 'days') == 0 ? 1 : td.diff(fd, 'days'));
+                diffHour = diffDay * 8;
+            }
+            if (otType == 2550) {  // 日常加班
+                diffHour = td.diff(fd, 'hours', true);
+                diffDay = diffHour / 8;
+            }
+            if (diffHour < 0) {
+                $.modal.msgError('截止日期必须晚于开始日期！')
+                return;
+            }
+            row.daySum = diffDay;
+            row.hourSum = diffHour;
+            $("#" + table.options.id).bootstrapTable('updateByUniqueId', {id: row.index, row: row});
+
+        }
+
+
+        $("#hritemsId").on('change', function (e) {
+            $("#bootstrap-table").bootstrapTable("removeAll");
+        });
     </script>
 </body>
 </html>
