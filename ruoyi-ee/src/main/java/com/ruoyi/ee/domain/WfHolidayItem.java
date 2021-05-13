@@ -40,7 +40,7 @@ public class WfHolidayItem extends BaseEntity
 
     /** 时数小计 */
     @Excel(name = "时数小计")
-    private Long hourSum;
+    private Double hourSum;
 
     /** 扣款方式 2扣薪   0 不扣薪 （不动声色） */
     @Excel(name = "扣款方式", readConverterExp = "不动声色")
@@ -99,12 +99,12 @@ public class WfHolidayItem extends BaseEntity
     {
         return daySum;
     }
-    public void setHourSum(Long hourSum) 
+    public void setHourSum(Double hourSum)
     {
         this.hourSum = hourSum;
     }
 
-    public Long getHourSum() 
+    public Double getHourSum()
     {
         return hourSum;
     }

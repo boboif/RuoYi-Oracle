@@ -129,6 +129,8 @@
                         'change #fromDate': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
                             let fDate = '';
+                            alert($(e.target).val())
+                            alert(value)
                             fDate = $(e.target).val();
                             row.fromDate = fDate;
                             if (checkRow(row) == false) {
@@ -298,9 +300,9 @@
             if(hritemsId ==2551){
                 $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setDaysOfWeekDisabled', [1,2,3,4,5]);
             }
+            $("input[name='cwExtraWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption);
 
-
-            fromDate.on('change', function (e) {
+            /*fromDate.on('change', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 let endTime = $(e.target).val();
@@ -318,7 +320,7 @@
                 e.stopPropagation();
                 let endTime = $(e.target).val();
                 $("input[name='cwExtraWorkitemList[" + i + "].fromDate']").datetimepicker('setEndDate', endTime);
-            });
+            });*/
         });
         $("input[name='allDays']").val(allDays);
         $("input[name='allHours']").val(allHours);

@@ -137,7 +137,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="batchCwOutWorkitem">
         insert all
         <foreach item="item" index="index" collection="list">
-            into cw_out_workitem( cw_out_workitem_id, cw_out_work_id, from_date, to_date, day_sum, hour_sum, remark, hritems_id) values ( #{item.cwOutWorkitemId}, #{item.cwOutWorkId}, #{item.fromDate}, #{item.toDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.hritemsId})
+            into cw_out_workitem( cw_out_workitem_id, cw_out_work_id, from_date, to_date, day_sum, hour_sum, remark, hritems_id)
+            values (seq('SEQ_CW_OUT_WORK'), #{item.cwOutWorkId}, #{item.fromDate}, #{item.toDate}, #{item.daySum,jdbcType=DOUBLE}, #{item.hourSum,jdbcType=DOUBLE}, #{item.remark}, #{item.hritemsId,jdbcType=INTEGER})
         </foreach>
         SELECT 1 FROM DUAL
     </insert>

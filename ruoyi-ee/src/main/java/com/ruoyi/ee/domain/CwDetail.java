@@ -40,7 +40,7 @@ public class CwDetail extends BaseEntity
 
     /** 时长 */
     @Excel(name = "时长")
-    private Long hourSum;
+    private Double hourSum;
 
     /** 补偿或扣款 */
     @Excel(name = "补偿或扣款")
@@ -180,12 +180,12 @@ public class CwDetail extends BaseEntity
     {
         return endDate;
     }
-    public void setHourSum(Long hourSum) 
+    public void setHourSum(Double hourSum)
     {
         this.hourSum = hourSum;
     }
 
-    public Long getHourSum() 
+    public Double getHourSum()
     {
         return hourSum;
     }

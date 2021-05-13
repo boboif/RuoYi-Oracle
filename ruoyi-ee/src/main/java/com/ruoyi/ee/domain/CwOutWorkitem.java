@@ -36,11 +36,11 @@ public class CwOutWorkitem extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "预支金额")
-    private Long daySum;
+    private Double daySum;
 
     /** $column.columnComment */
     @Excel(name = "预支金额")
-    private Long hourSum;
+    private Double hourSum;
 
     /** $column.columnComment */
     @Excel(name = "预支金额")
@@ -82,21 +82,21 @@ public class CwOutWorkitem extends BaseEntity
     {
         return toDate;
     }
-    public void setDaySum(Long daySum) 
+    public void setDaySum(Double daySum)
     {
         this.daySum = daySum;
     }
 
-    public Long getDaySum() 
+    public Double getDaySum()
     {
         return daySum;
     }
-    public void setHourSum(Long hourSum) 
+    public void setHourSum(Double hourSum)
     {
         this.hourSum = hourSum;
     }
 
-    public Long getHourSum() 
+    public Double getHourSum()
     {
         return hourSum;
     }

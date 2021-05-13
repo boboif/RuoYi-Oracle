@@ -140,7 +140,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="batchCwExtraWorkitem">
         insert all
         <foreach item="item" index="index" collection="list">
-            into cw_extra_workitem( cw_extra_workitem_id, cw_extra_work_id, to_date, from_date, day_sum, hour_sum, remark, benefit_double, hritems_id, pay_way) values ( #{item.cwExtraWorkitemId}, #{item.cwExtraWorkId}, #{item.toDate}, #{item.fromDate}, #{item.daySum}, #{item.hourSum}, #{item.remark}, #{item.benefitDouble}, #{item.hritemsId}, #{item.payWay})
+            into cw_extra_workitem( cw_extra_workitem_id, cw_extra_work_id, to_date, from_date, day_sum, hour_sum, remark, benefit_double, hritems_id, pay_way)
+            values (seq('seq_cw_extra_work'), #{item.cwExtraWorkId}, #{item.toDate}, #{item.fromDate}, #{item.daySum,jdbcType=DOUBLE}, #{item.hourSum,jdbcType=DOUBLE}, #{item.remark}, #{item.benefitDouble,jdbcType=INTEGER}, #{item.hritemsId,jdbcType=INTEGER}, #{item.payWay,jdbcType=INTEGER})
         </foreach>
         SELECT 1 FROM DUAL
     </insert>

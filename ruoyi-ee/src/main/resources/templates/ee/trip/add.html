@@ -62,6 +62,8 @@
 </div>
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: moment-js"/>
+
 <script th:inline="javascript">
     var prefix = ctx + "ee/trip"
     $("#form-trip-add").validate({
@@ -107,7 +109,6 @@
                     title: '开始时间',
                     formatter: function (value, row, index) {
                        var html = $.common.sprintf("<input class='form-control' type='text' id='fromDate' readonly name='cwOutWorkitemList[%s].fromDate' value='%s'>", index, value);
-
                         return html;
                     },
                     events: window.operatEvents = {
@@ -135,8 +136,7 @@
                     events: window.operatEvents = {
                         'change #toDate': function (e, value, row, index) {
                             row = $("#" + table.options.id).bootstrapTable('getRowByUniqueId', row.index);
-                            let tDate = '';
-                            tDate = $(e.target).val();
+                            let tDate = $(e.target).val();
                             row.toDate = tDate;
                             if (checkRow(row) == false) {
                                 row.toDate = '';
@@ -248,7 +248,7 @@
         format: "yyyy-mm-dd hh:ii",
         autoClose: true,
         minuteStep: 60,
-        pickTime: true,
+        pickTime: false,
         language: 'zh-CN',
         todayHighlight: true,
         pickerPosition: 'top-right',
@@ -263,12 +263,12 @@
         let allDays = 0;
         let allHours = 0;
         rows.forEach(function (row, i) {
-
             allDays = Number(allDays) + Number(row.daySum);
             allHours = Number(allHours) + Number(row.hourSum);
+            $("input[name='cwOutWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption);
+            $("input[name='cwOutWorkitemList[" + i + "].toDate']").datetimepicker(dateTimeOption);
 
-
-            $("input[name='cwOutWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption).on('change', function (e) {
+         /*   $("input[name='cwOutWorkitemList[" + i + "].fromDate']").datetimepicker(dateTimeOption).on('change', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 let endTime = $(e.target).val();
@@ -279,8 +279,7 @@
                 e.stopPropagation();
                 let endTime = $(e.target).val();
                 $("input[name='cwOutWorkitemList[" + i + "].fromDate']").datetimepicker('setEndDate', endTime);
-            });
-
+            });*/
         });
 
         $("input[name='allDays']").val(allDays);
@@ -296,7 +295,7 @@
         if ($.common.isEmpty(row.toDate)) {
             return;
         }
-        if (moment(row.fromDate).format('yyyyMMdd') >= moment(row.toDate).format('yyyyMMdd')) {
+        if (moment(row.fromDate) >= moment(row.toDate)) {
             $.modal.msgError('出差的开始时间和截止时间不符合规范')
             return false;
         }

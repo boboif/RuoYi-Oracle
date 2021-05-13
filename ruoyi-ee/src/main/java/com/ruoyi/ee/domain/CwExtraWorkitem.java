@@ -36,11 +36,11 @@ public class CwExtraWorkitem extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "加班类型")
-    private Long daySum;
+    private Double daySum;
 
     /** $column.columnComment */
     @Excel(name = "加班类型")
-    private Long hourSum;
+    private Double hourSum;
 
     /** 加班工资的倍数 */
     @Excel(name = "加班工资的倍数")
@@ -90,21 +90,21 @@ public class CwExtraWorkitem extends BaseEntity
     {
         return fromDate;
     }
-    public void setDaySum(Long daySum) 
+    public void setDaySum(Double daySum)
     {
         this.daySum = daySum;
     }
 
-    public Long getDaySum() 
+    public Double getDaySum()
     {
         return daySum;
     }
-    public void setHourSum(Long hourSum) 
+    public void setHourSum(Double hourSum)
     {
         this.hourSum = hourSum;
     }
 
-    public Long getHourSum() 
+    public Double getHourSum()
     {
         return hourSum;
     }
