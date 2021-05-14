@@ -58,4 +58,8 @@ public interface WkfApproveQueryMapper
      * @return 结果
      */
     public int deleteWkfApproveQueryByIds(String[] processInsIds);
+
+    public Long getHolidayIdByProcessInsId(Long processInsId);
+    public Long getOtIdByProcessInsId(Long processInsId);
+    public Long getOutWorkIdByProcessInsId(Long processInsId);
 }

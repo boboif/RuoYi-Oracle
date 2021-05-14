@@ -58,4 +58,6 @@ public interface IWkfApproveService
      * @return 结果
      */
     public int deleteWkfApproveById(Long processInsId);
+
+    public <V> V selectFromByid(String processFrom,Long processInsId);
 }

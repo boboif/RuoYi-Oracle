@@ -80,4 +80,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{processInsId}
         </foreach>
     </delete>
+    <select id="getHolidayIdByProcessInsId" parameterType="Long" resultType="Long">
+        select wf_holiday_id from wf_holiday
+        where process_ins_id = #{processInsId}
+    </select>
+
+    <select id="getOtIdByProcessInsId" parameterType="Long" resultType="Long">
+        select cw_extra_work_id from cw_extra_work
+        where process_ins_id = #{processInsId}
+    </select>
+
+    <select id="getOutWorkIdByProcessInsId" parameterType="Long" resultType="Long">
+        select cw_out_work_id from cw_out_work
+        where process_ins_id = #{processInsId}
+    </select>
 </mapper>

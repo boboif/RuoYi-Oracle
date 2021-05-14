@@ -1,6 +1,10 @@
 package com.ruoyi.ee.controller;
 
 import java.util.List;
+
+import com.ruoyi.ee.domain.CwExtraWork;
+import com.ruoyi.ee.domain.CwOutWork;
+import com.ruoyi.ee.domain.WfHoliday;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,6 +102,30 @@ public class WkfApproveController extends BaseController
         WkfApproveQuery wkfApproveQuery = wkfApproveQueryService.selectWkfApproveById(processInsId);
         mmap.put("wkfApproveQuery", wkfApproveQuery);
         return prefix + "/approveForm";
+    }
+
+    @GetMapping("/approveHoliday/{processInsId}")
+    public String approveHoliday(@PathVariable("processInsId") Long processInsId, ModelMap mmap)
+    {
+        WfHoliday wkfApproveQuery = wkfApproveQueryService.selectFromByid("HOLIDAY",processInsId);
+        mmap.put("wkfApproveQuery", wkfApproveQuery);
+        return prefix + "/approveHoliday";
+    }
+
+    @GetMapping("/approveOt/{processInsId}")
+    public String approveOt(@PathVariable("processInsId") Long processInsId, ModelMap mmap)
+    {
+        CwExtraWork wkfApproveQuery = wkfApproveQueryService.selectFromByid("OT",processInsId);
+        mmap.put("wkfApproveQuery", wkfApproveQuery);
+        return prefix + "/approveOt";
+    }
+
+    @GetMapping("/approveTrip/{processInsId}")
+    public String approveTrip(@PathVariable("processInsId") Long processInsId, ModelMap mmap)
+    {
+        CwOutWork wkfApproveQuery = wkfApproveQueryService.selectFromByid("TRIP",processInsId);
+        mmap.put("wkfApproveQuery", wkfApproveQuery);
+        return prefix + "/approveTrip";
     }
 
     /**

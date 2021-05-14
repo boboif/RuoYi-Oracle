@@ -76,13 +76,7 @@
             </button>
         </div>
     </div>
-    <div>
-        <table>
-            <tr th:each="wfHolidayItem : ${wfHoliday.wfHolidayItemList}">
-            <td th:text="${wfHolidayItem.fromDate}"></td>
-            </tr>
-        </table>
-    </div>
+
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js"/>
     <th:block th:include="include :: moment-js"/>
@@ -228,9 +222,6 @@
             };
             $.table.init(options);
 
-            console.log('=========');
-            console.log(   options)
-            console.log( [[${wfHoliday.wfHolidayItemList}]])
         });
 
         function addColumn() {

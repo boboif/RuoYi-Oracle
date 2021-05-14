@@ -1,6 +1,13 @@
 package com.ruoyi.ee.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.ee.domain.CwExtraWork;
+import com.ruoyi.ee.domain.CwOutWork;
+import com.ruoyi.ee.domain.WfHoliday;
+import com.ruoyi.ee.mapper.CwExtraWorkMapper;
+import com.ruoyi.ee.mapper.CwOutWorkMapper;
+import com.ruoyi.ee.mapper.WfHolidayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.ee.mapper.WkfApproveQueryMapper;
@@ -19,6 +26,12 @@ public class WkfApproveServiceImpl implements IWkfApproveService
 {
     @Autowired
     private WkfApproveQueryMapper wkfApproveQueryMapper;
+    @Autowired
+    private CwExtraWorkMapper cwExtraWorkMapper;
+    @Autowired
+    private CwOutWorkMapper cwOutWorkMapper;
+    @Autowired
+    private WfHolidayMapper wfHolidayMapper;
 
     /**
      * 查询审批
@@ -90,5 +103,26 @@ public class WkfApproveServiceImpl implements IWkfApproveService
     public int deleteWkfApproveById(Long processInsId)
     {
         return wkfApproveQueryMapper.deleteWkfApproveQueryById(processInsId);
+    }
+
+    @Override
+    public <V> V selectFromByid(String processFrom,Long processInsId) {
+        Long id= 0L;
+        if("HOLIDAY".equals(processFrom)){
+            id = wkfApproveQueryMapper.getHolidayIdByProcessInsId(processInsId);
+            WfHoliday holiday = wfHolidayMapper.selectWfHolidayById(id);
+            return (V) holiday;
+        }else if("OT".equals(processFrom)){
+            id = wkfApproveQueryMapper.getOtIdByProcessInsId(processInsId);
+            CwExtraWork ot = cwExtraWorkMapper.selectCwExtraWorkById(id);
+            return (V) ot;
+        }else if("TRIP".equals(processFrom)){
+            id = wkfApproveQueryMapper.getOutWorkIdByProcessInsId(processInsId);
+            CwOutWork Trip = cwOutWorkMapper.selectCwOutWorkById(id);
+            return (V) Trip;
+        }
+
+        return null;
+
     }
 }
